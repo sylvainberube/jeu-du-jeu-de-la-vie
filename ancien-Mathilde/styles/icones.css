@@ -1,0 +1,36 @@
+:root {
+    --noir: rgb(3,3,3);
+    --bleu: rgb(18, 52 ,88);
+    --beige: rgb(212,201,190);
+    --blanc: rgb(241, 239, 236);
+}
+.conteneur-icones-etampes {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+
+    background-color: var(--bleu);
+    text-align: center;
+    font-size: 10px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    
+    width: 50px;
+    position: absolute;
+    right : 0px;
+    align-items: center;
+    top: 66%;
+    transform: translate(0, -50%);
+    border-radius: 5px;
+}
+
+.icone-etampe {
+    font-size: 14pt;
+    color : var(--noir);
+    background-color: var(--blanc);
+    padding: 5px;
+    margin: 5px;
+    border-radius: 10px;
+    width: 30px;
+}

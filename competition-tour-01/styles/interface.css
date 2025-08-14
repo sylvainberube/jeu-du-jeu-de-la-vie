@@ -1,0 +1,168 @@
+:root {
+    --noir: rgb(0, 0, 0);
+    --bleu: rgb(18, 52, 88);
+    --beige: rgb(192, 192, 192);
+    --blanc: rgb(255, 255, 255);
+}
+
+.conteneur-classement-joueurs {
+    position: absolute;
+    top: 33%;
+    left: 0%;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    transform: translate(0, -50%);
+
+    background-color: var(--noir);
+    border: 1px solid var(--noir);
+    border-bottom: none;
+    border-left: none;
+    border-radius: 0px 10px 0px 0px;
+}
+
+.titre-classement-joueurs {
+    width: 100%;
+    order: -1;
+
+    text-align: center;
+    font-size: 16pt;
+    font-weight: bold;
+    color: var(--blanc);
+    background-color: var(--noir);
+    border-radius: 0px 10px 0px 0px;
+    margin: 2px 0px 2px 0px;
+}
+
+.item-classement-joueurs {
+    text-align: center;
+    background-color: var(--blanc);
+    width: 100%;
+    margin: 2px auto;
+    padding: 2px 0px 2px 0px;
+    font-size: 16pt;
+}
+
+
+.conteneur-classement-parties {
+    position: absolute;
+    top: 66%;
+    left: 0%;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    transform: translate(0, -50%);
+    align-items: flex-end;
+    justify-content: flex-start;
+
+    background-color: var(--noir);
+    border-radius: 0px 10px 0px 0px;
+    border: 1px solid var(--noir);
+    border-bottom: none;
+    border-left: none;
+}
+
+.titre-classement-parties {
+    width: 100%;
+
+    background-color: var(--noir);
+    color: var(--blanc);
+    font-size: 16pt;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 0px 10px 0px 0px;
+    margin: 2px 0px 2px 0px;
+    border: none;
+}
+
+.item-classement-parties {
+    background-color: var(--blanc);
+    width: 80%;
+    margin: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    font-size: 14pt;
+    margin-bottom: 1px;
+    margin: 2px auto;
+    padding: 2px 0px 2px 0px;
+    font-size: 16pt;
+}
+
+
+.temps-restant-encadre {
+    position: absolute;
+    left: 50%;
+    bottom: 0%;
+    width: 25%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0px;
+    transform: translate(-50%, 0);
+
+    background-color: var(--noir);
+    border: 1px solid var(--noir);
+    border-bottom: none;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.temps-restant-tour {
+    width: 20%;
+    justify-self: center;
+    text-align: center;
+    padding: 4px;
+    color: var(--blanc);
+    font-size: 16pt;
+    font-weight: bold;
+    padding: 4px;
+
+    /*
+    border: 3px solid red;
+    border-radius: 10px 0px 0px 0px;
+    */
+}
+
+.temps-restant-interieur {
+    width: 80%;
+    justify-self: center;
+    text-align: center;
+    background-color: var(--blanc);
+    font-size: 16pt;
+    padding: 4px;
+    /* margin-top: 5px; */
+    /* width : 100%; */
+    /* width: auto; */
+    /* border: 3px solid blue; */
+    border-radius: 0px 10px 0px 0px;
+}
+
+.conteneur-bouton-recentrer {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    background-color: var(--noir);
+    text-align: center;
+    font-size: 10px;
+    padding: 5px;
+    width: 50px;
+    border-radius: 0px 0px 5px 0px;
+}
+
+.icone-bouton-recentrer {
+    background-color: var(--beige);
+    padding: 5px;
+    margin: 5px;
+    border-radius: 10px;
+    width: 30px;
+}

@@ -1,0 +1,16 @@
+{
+  "name": "test-jeu-de-la-vie",
+  "version": "1.0.0",
+  "description": "Test du jeu de la vie à 2 joueurs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mathilde et Sylvain",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "socket": "^1.0.85",
+    "socket.io": "^4.8.1"
+  }
+}

@@ -1,0 +1,45 @@
+Références primaires:
+ - https://p5js.org/tutorials/getting-started-with-nodejs/
+ - https://www.youtube.com/watch?v=bjULmG8fqc8
+
+Références secondaires:
+ - https://www.youtube.com/playlist?list=PLRqwX-V7Uu6YxDKpFzf_2D84p0cyk4T7X
+
+
+1. Lancer Node
+Script sur le bureau : startnode.bat
+
+Pour vérifier la version de node et de npm:
+>> node -v
+>> npm -v
+
+
+2. Créer un fichier package.json
+>> npm init
+
+
+3. Installer Express.js
+>> npm install express
+
+Pour vérifier l'installation:
+>> npm list
+
+
+4. Lancer le serveur
+node server.js
+
+
+5. Installer nodemon
+>> npm install -g nodemon
+
+Pour l'utiliser:
+>> nodemon server.js
+
+
+Framework : node.js
+socket.io
+
+
+nodejs.org
+
+nodemon

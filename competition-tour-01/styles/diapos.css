@@ -1,0 +1,75 @@
+:root {
+    --noir: rgb(0, 0, 0);
+    --bleu: rgb(18, 52, 88);
+    --beige: rgb(192,192,192);
+    --blanc: rgb(255, 255, 255);
+}
+
+.diapo {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    /* height: calc(9/16*50vw); */
+
+    background: var(--blanc);
+    border: 8px solid var(--noir);
+    border-radius: 20px;
+    text-align: center;
+}
+
+.titre {
+    width: 95%;
+    margin: 20px auto;
+
+    font-size: 32pt;
+    font-weight: bold;
+    /*
+    justify-self: center;
+    border: 2px solid black;
+    */
+}
+
+.texte-diapo {
+    width: 95%;
+    margin: 20px auto;
+
+    font-size: 18pt;
+    /*
+    position: absolute;
+    justify-self: center;
+     */
+}
+
+.element {
+    margin: 20px auto;
+    display: block;         /* Force un affichage en bloc (vertical) */
+
+    font-size: 16pt;
+    border-radius: 6px;
+    /*
+    left: 50%;
+    transform: translate(-50%, 0);
+    justify-self: center;
+    position: absolute;
+    */
+}
+
+.conteneur-joueurs {
+    margin: 20px auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    row-gap: 10px;
+    /* espace entre les lignes */
+
+    width: 80%;
+    font-size: 18pt;
+    /*
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    */
+}
