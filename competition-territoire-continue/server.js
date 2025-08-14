@@ -58,7 +58,6 @@ function nouvelleConnexion(socket) {
         }
 
         io.sockets.emit('grille', cellules);
-        console.log(cellules);
     }
 }
 

@@ -38,9 +38,6 @@ function recevoirInitinalisation(dataInit) {
     lignes = dataInit.lignes;
     colonnes = dataInit.colonnes;
 
-    print('colonnes' + colonnes);
-    print('lignes' + lignes);
-
     initialisationFaite = true;
 }
 
