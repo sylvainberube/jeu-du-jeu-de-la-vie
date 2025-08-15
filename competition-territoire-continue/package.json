@@ -4,8 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"node Controleur.js\" \"node Grille.js\" \"node Simulateur.js\" \"node server.js\""
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mathilde Poulin et Sylvain Bérubé",
   "license": "ISC",

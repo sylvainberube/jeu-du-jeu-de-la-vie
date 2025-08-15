@@ -1,6 +1,6 @@
 let lignes;
 let colonnes;
-cellules = [];
+let cellules = [];
 
 initialisationFaite = false;
 
@@ -16,7 +16,7 @@ function draw() {
   background(220, 100, 200);
 
   if (initialisationFaite) {
-  afficherGrille();
+    afficherGrille();
   }
 }
 
@@ -29,16 +29,16 @@ function mousePressed() {
   socket.emit('modificationGrille', position);
 }
 
-function recevoirGrille(cellulesServeur) {
-  cellules = Array.from(cellulesServeur);
-}
-
 function recevoirInitinalisation(dataInit) {
     cellules = Array.from(dataInit.grille);
     lignes = dataInit.lignes;
     colonnes = dataInit.colonnes;
-
+    
     initialisationFaite = true;
+}
+
+function recevoirGrille(cellulesServeur) {
+  cellules = Array.from(cellulesServeur);
 }
 
 function afficherGrille() {

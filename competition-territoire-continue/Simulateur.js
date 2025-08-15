@@ -54,3 +54,5 @@ class Simulateur {
     }
 
 }
+
+module.exports = Simulateur;
