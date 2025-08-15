@@ -1,11 +1,14 @@
+const Grille = require('./Grille');
+const Simulateur = require('./Simulateur');
+
 class Controleur {
     constructor(lignes = 60, colonnes = 40, intervalle = 200) {
         this.lignes = lignes;
         this.colonnes = colonnes;
 
         this.grille = new Grille(lignes, colonnes);
-        this.vue = new Vue(this.grille);
-        this.vue.associerControleur(this);
+        // this.vue = new Vue(this.grille);
+        // this.vue.associerControleur(this);
         this.simulateur = new Simulateur(this.simulateur);
 
         this.grilleInitiale = Grille.copier(this.grille);
@@ -47,7 +50,7 @@ class Controleur {
         this.motifsJson;
         this.motifsComplets;
         this.grillesMotifs;
-        this.motifsJson = loadJSON('motifsCompetition.json', this.initialiserMotifs.bind(this));
+        // this.motifsJson = loadJSON('motifsCompetition.json', this.initialiserMotifs.bind(this));
         this.motifActuelIndex = null;
         this.blocAleatoireActif = false;
         this.motifPixelActif = true;
@@ -78,6 +81,22 @@ class Controleur {
         // Variables non utilisées
         this.mode = 2;  // 2:Bac à sable, 4:Compétition
         this.etat = "en-marche";
+    }
+
+    obtenirIntervalle() {
+        return this.intervalle;
+    }
+
+    obtenirGrille() {
+        return this.grille.getCellules();
+    }
+
+    genererGrilleAleatoire(nbJoueurs = 2) {
+        this.grille.genererAleatoire(nbJoueurs);
+    }
+
+    modifierCellule(celluleLigne, celluleColonne, etat) {
+        this.grille.modifierCellule(celluleLigne, celluleColonne, etat);
     }
 
     gestionDuJeu() {
@@ -300,6 +319,8 @@ class Controleur {
     }
 
     calculerGenerationSuivante() {
+        this.simulateur.calculerGenerationSuivante(this.nbJoueurs);
+        /*
         if (this.enMarche && (millis() - this.derniereMiseAJour) > this.intervalle) {
             this.simulateur.calculerGenerationSuivante(this.nbJoueurs);
             this.nbGenerations += 1;
@@ -308,6 +329,7 @@ class Controleur {
         } else {
             return false;
         }
+        */
     }
 
 
@@ -489,21 +511,22 @@ class Controleur {
     accueil() {
         this.etatJeu = "accueil";
     }
-    nouvellePartie(nbJoueurs = 10) {
+
+    nouvellePartie(nbJoueurs = 0) {
         this.nbJoueurs = nbJoueurs;
         for (let i = 1; i <= nbJoueurs; i++) {
             this.joueursNoms.push("Joueur" + i);
-            let couleur = color((Math.floor((i - 1) / 5) * 36 + 2 * 36 * (i - 1)) % 360, 100, 75);
-            this.joueursCouleurs.push(couleur);
-            this.vue.modifierCouleurEtat(i, couleur);
+            // let couleur = color((Math.floor((i - 1) / 5) * 36 + 2 * 36 * (i - 1)) % 360, 100, 75);
+            // this.joueursCouleurs.push(couleur);
+            // this.vue.modifierCouleurEtat(i, couleur);
         }
 
         this.grille = Grille.initialiserCompetition(this.lignes, this.colonnes, nbJoueurs);
         this.simulateur.grille = this.grille;
-        this.vue.grille = this.grille;
-        this.vue.centrerGrille();
+        // this.vue.grille = this.grille;
+        // this.vue.centrerGrille();
 
-        this.vue.dessiner();
+        // this.vue.dessiner();
     }
 
     couleurFond() {
@@ -724,3 +747,5 @@ class Controleur {
         return motifRotation
     }
 }
+
+module.exports = Controleur;

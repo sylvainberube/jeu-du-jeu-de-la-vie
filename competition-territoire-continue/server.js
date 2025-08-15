@@ -1,11 +1,20 @@
-let colonnes = 288;
-let lignes = 62;
-let cellules = Array.from({ length: colonnes }, () => Array(lignes).fill(0));
+const Grille = require('./Grille');
+const Simulateur = require('./Simulateur');
+const Controleur = require('./Controleur');
+
+let controleur;
+
+let colonnes = 100;
+let lignes = 100;
+// let cellules = Array.from({ length: colonnes }, () => Array(lignes).fill(0));
+
+controleur = new Controleur(lignes, colonnes, 100);
+let nbJoueurs = 2;
+controleur.nouvellePartie(nbJoueurs);
+controleur.genererGrilleAleatoire(nbJoueurs);
 
 let joueursId = [];
-
-// let tempsIteration = 200;
-
+/*
 for (let i = 0; i < colonnes; i++) {
     for (let j = 0; j < lignes; j++) {
         if (Math.random() <= 0.4) {
@@ -19,6 +28,7 @@ for (let i = 0; i < colonnes; i++) {
         }
     }
 }
+*/
 
 // Importation du module Express
 let express = require('express');
@@ -35,12 +45,13 @@ io.sockets.on('connection', nouvelleConnexion);
 function nouvelleConnexion(socket) {
     joueursId.push(socket.id);
 
-    console.log('Nouvelle connexion ' + socket.id);
+    console.log('Nouvelle connexion : ' + socket.id);
 
+    let grille = controleur.obtenirGrille();
     dataInit = {
-        'grille' : cellules,
-        'colonnes' : colonnes,
-        'lignes' : lignes
+        'grille': grille,
+        'colonnes': colonnes,
+        'lignes': lignes
     }
 
     io.sockets.emit('initialisation', dataInit);
@@ -49,20 +60,25 @@ function nouvelleConnexion(socket) {
 
     function modificationGrille(position) {
         let joueurId = joueursId.indexOf(socket.id);
+        console.log("Position : ");
         console.log(position);
         console.log("Socket : " + socket.id + " (joueur " + (joueurId + 1) + ")");
         let cellX = Math.floor(position.x / 20);
         let cellY = Math.floor(position.y / 20);
         if (cellX >= 0 && cellX < colonnes && cellY >= 0 && cellY < lignes) {
-            cellules[cellX][cellY] = joueurId + 1;
+            controleur.modifierCellule(cellX, cellY, joueurId + 1);
+            // cellules[cellX][cellY] = joueurId + 1;
         }
 
-        io.sockets.emit('grille', cellules);
+        // io.sockets.emit('grille', controleurcellules);
+        io.sockets.emit('grille', controleur.obtenirGrille());
     }
 }
 
 // Simulation d'une nouvelle génération
 function calculerGenerationSuivante() {
+    controleur.calculerGenerationSuivante();
+    /*
     // Initialiser toutes les cellules à 0
     let grilleGenerationSuivante = Array.from({ length: colonnes }, () => Array(lignes).fill(0));
 
@@ -83,10 +99,12 @@ function calculerGenerationSuivante() {
             }
         }
     }
-    cellules = Array.from(grilleGenerationSuivante);
-    io.sockets.emit('grille', cellules);
+    */
+    grille = Array.from(controleur.obtenirGrille());
+    io.sockets.emit('grille', grille);
 }
 
+/*
 function obtenirEtatsVoisins(i, j) {
     const voisins = [];
     for (let k = -1; k <= 1; k++) {
@@ -103,5 +121,6 @@ function obtenirEtatsVoisins(i, j) {
     }
     return voisins;
 }
+*/
 
-setInterval(calculerGenerationSuivante, 1000);
+setInterval(calculerGenerationSuivante, controleur.obtenirIntervalle());

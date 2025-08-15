@@ -1,3 +1,5 @@
+const Grille = require('./Grille');
+
 class Vue {
     constructor(grille, tailleCellule = 20) {
         this.grille = grille;                   // instance de la grille logique

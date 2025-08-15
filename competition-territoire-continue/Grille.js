@@ -61,7 +61,7 @@ class Grille {
         // Initialisation aléatoire
         for (let i = 0; i < this.lignes; i++) {
             for (let j = 0; j < this.colonnes; j++) {
-                if (random() < densite) {
+                if (Math.random() < densite) {
                     this.modifierCellule(i, j, Math.floor(1 + nbJoueurs * Math.random()));
                 }
             }
@@ -165,4 +165,10 @@ class Grille {
         }
         return compteur;
     }
+<<<<<<< HEAD
 }
+=======
+}
+
+module.exports = Grille;
+>>>>>>> e3a15aa1b7368d4cb4eb188d1f1c5224af8ff7ec
