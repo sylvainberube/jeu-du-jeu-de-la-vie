@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "concurrently \"node Controleur.js\" \"node Grille.js\" \"node Simulateur.js\" \"node server.js\""
   },
   "author": "Mathilde Poulin et Sylvain Bérubé",
   "license": "ISC",

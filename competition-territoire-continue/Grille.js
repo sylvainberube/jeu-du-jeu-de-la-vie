@@ -166,3 +166,5 @@ class Grille {
         return compteur;
     }
 }
+
+console.log('allo');
