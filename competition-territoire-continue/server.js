@@ -102,6 +102,7 @@ function calculerGenerationSuivante() {
     */
     grille = Array.from(controleur.obtenirGrille());
     io.sockets.emit('grille', grille);
+
 }
 
 /*

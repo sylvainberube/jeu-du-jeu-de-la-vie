@@ -3,6 +3,8 @@ const Grille = require('./Grille');
 class Vue {
     constructor(grille, tailleCellule = 20) {
         this.grille = grille;                   // instance de la grille logique
+        this.colonnes = grille.length;
+        this.lignes = grille[0].length;
         this.tailleCellule = tailleCellule;     // taille d’une cellule à zoom 1
         this.zoom = 1;                          // facteur de zoom
         this.decalageX = 0;                     // décalage horizontal coin supérieur gauche
@@ -14,6 +16,7 @@ class Vue {
         this.couleurBordure = color(0, 0, 90);        // couleur de la bordure de la grille
         this.epaisseurBordure = 1;              // épaisseur de la bordure de la grille
         this.couleurFond = color(0, 0, 30);  // couleur de fond à l'extérieur de la grille
+        this.etatJeu = "enMarche"           //État actuel du jeu (chancge selon ce qu'il y a à afficher)
 
         this.controleur = null;
 
@@ -88,6 +91,45 @@ class Vue {
     associerControleur(controleur) {
         this.controleur = controleur;
     }
+
+    initialisationGlobale() {
+        this.initialiserClassement();
+        this.initialiserAccueilInterface();
+        this.initialiserClassementJoueursPartie();
+    }
+
+    afficher() {
+        switch(this.etatJeu) {
+            case ("enMarche") :
+                this.afficherGrille();
+            break;
+        }
+    }
+
+    afficherGrille() {
+        stroke(192);
+        strokeWeight(1);
+
+        let tailleCellule = 20;
+
+        for (let i = 0; i < this.colonnes; i++) {
+            for (let j = 0; j < this.lignes; j++) {
+                switch (cellules[i][j]) {
+                    case 0:
+                        fill(32);
+                    break;
+                    case 1:
+                        fill(255, 100, 100);
+                    break;
+                    case 2:
+                        fill(100, 100, 255);
+                    break;
+      }
+                square(i * this.tailleCellule, j * this.tailleCellule, this.tailleCellule);
+            }
+        }
+    }
+
 
     initialiserClassement() {
         this.classementJoueursDiv = createDiv();

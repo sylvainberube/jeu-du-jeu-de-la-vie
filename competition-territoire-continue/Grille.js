@@ -165,10 +165,6 @@ class Grille {
         }
         return compteur;
     }
-<<<<<<< HEAD
-}
-=======
 }
 
 module.exports = Grille;
->>>>>>> e3a15aa1b7368d4cb4eb188d1f1c5224af8ff7ec

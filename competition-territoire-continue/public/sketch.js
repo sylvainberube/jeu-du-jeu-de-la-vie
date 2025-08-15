@@ -1,6 +1,4 @@
-let lignes;
-let colonnes;
-let cellules = [];
+let vue;
 
 initialisationFaite = false;
 
@@ -16,7 +14,7 @@ function draw() {
   background(220, 100, 200);
 
   if (initialisationFaite) {
-    afficherGrille();
+    vue.afficher();
   }
 }
 
@@ -30,18 +28,18 @@ function mousePressed() {
 }
 
 function recevoirInitinalisation(dataInit) {
-    cellules = Array.from(dataInit.grille);
-    lignes = dataInit.lignes;
-    colonnes = dataInit.colonnes;
+    let cellules = Array.from(dataInit.grille);
+    vue = new Vue(cellules, colonnes, lignes);
     
     initialisationFaite = true;
 }
 
-function recevoirGrille(cellulesServeur) {
-  cellules = Array.from(cellulesServeur);
+function recevoirGrille(grille) {
+  cellules = Array.from(grille);
+
 }
 
-function afficherGrille() {
+/*function afficherGrille() {
   stroke(192);
   strokeWeight(1);
 
@@ -63,4 +61,4 @@ function afficherGrille() {
       square(i * tailleCellule, j * tailleCellule, tailleCellule);
     }
   }
-}
+}*/
