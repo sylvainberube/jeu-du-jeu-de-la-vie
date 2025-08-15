@@ -18,7 +18,7 @@ class Controleur {
         this.intervalle = intervalle; // en ms
         this.derniereMiseAJour = 0;
 
-        this.nbJoueurs = 10;
+        this.nbJoueurs = 2;
         this.joueursNoms = [];
         this.joueursCouleurs = [];
 
@@ -471,7 +471,6 @@ class Controleur {
 
         // Trier par points décroissants
         classement.sort((a, b) => b.points - a.points);
-
         return classement;
     }
 

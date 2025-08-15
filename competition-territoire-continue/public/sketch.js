@@ -7,7 +7,7 @@ function setup() {
 
   socket = io.connect('http://localhost:3000');
   socket.on('initialisation', recevoirInitinalisation);
-  socket.on('grille', recevoirGrille);
+  socket.on('update', recevoirUpdate);
 }
 
 function draw() {
@@ -29,13 +29,14 @@ function mousePressed() {
 
 function recevoirInitinalisation(dataInit) {
     let cellules = Array.from(dataInit.grille);
-    vue = new Vue(cellules, colonnes, lignes);
+    vue = new Vue(cellules);
     
     initialisationFaite = true;
 }
 
-function recevoirGrille(grille) {
-  cellules = Array.from(grille);
+function recevoirUpdate(data) {
+  vue.grille = Array.from(data.grille);
+  vue.classement = data.classement;
 
 }
 

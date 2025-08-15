@@ -78,6 +78,7 @@ function nouvelleConnexion(socket) {
 // Simulation d'une nouvelle génération
 function calculerGenerationSuivante() {
     controleur.calculerGenerationSuivante();
+    classement = controleur.obtenirClassementJoueurs();
     /*
     // Initialiser toutes les cellules à 0
     let grilleGenerationSuivante = Array.from({ length: colonnes }, () => Array(lignes).fill(0));
@@ -100,8 +101,13 @@ function calculerGenerationSuivante() {
         }
     }
     */
+
     grille = Array.from(controleur.obtenirGrille());
-    io.sockets.emit('grille', grille);
+    update = {
+        'grille' : grille,
+        'classement' : classement
+    }
+    io.sockets.emit('update', update);
 
 }
 

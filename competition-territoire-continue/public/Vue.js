@@ -1,4 +1,4 @@
-const Grille = require('./Grille');
+//const Grille = require('./Grille');
 
 class Vue {
     constructor(grille, tailleCellule = 20) {
@@ -21,6 +21,7 @@ class Vue {
         this.controleur = null;
 
         // Affichage du classement
+        this.classement = {};
         this.classementJoueursDiv;
         this.titreClassementJoueurDiv;
         this.lignesJoueursDiv = [];
@@ -58,7 +59,7 @@ class Vue {
         // Affichage du bouton de recentrement de la grille
         this.conteneurCentrerGrilleDiv;
         this.iconeCentrerGrilleImg;
-        this.initialiserCentrerGrille();
+        //this.initialiserCentrerGrille();
 
         // Affichage de la fin d'une manche
         this.diapoFinManche = new Diapo();
@@ -84,7 +85,7 @@ class Vue {
         this.iconeMotifHWSSImg;
         this.iconesMotifsImg;
         this.iconeRotationMotifImg;
-        this.initialiserIconesMotifs();
+        //this.initialiserIconesMotifs();
     }
 
     // Associer le contrôleur à la vue
@@ -92,16 +93,11 @@ class Vue {
         this.controleur = controleur;
     }
 
-    initialisationGlobale() {
-        this.initialiserClassement();
-        this.initialiserAccueilInterface();
-        this.initialiserClassementJoueursPartie();
-    }
-
     afficher() {
         switch(this.etatJeu) {
             case ("enMarche") :
                 this.afficherGrille();
+                this.afficherClassementJoueurs(this.classement);
             break;
         }
     }
@@ -110,11 +106,10 @@ class Vue {
         stroke(192);
         strokeWeight(1);
 
-        let tailleCellule = 20;
 
         for (let i = 0; i < this.colonnes; i++) {
             for (let j = 0; j < this.lignes; j++) {
-                switch (cellules[i][j]) {
+                switch (this.grille[i][j]) {
                     case 0:
                         fill(32);
                     break;
@@ -144,7 +139,7 @@ class Vue {
     afficherClassementJoueurs(classement) {
         // S’il y a plus de joueurs qu’avant, on crée les divs manquants
         while (this.lignesJoueursDiv.length < classement.length) {
-            let ligneDiv = createDiv();  // vide au départ
+            let ligneDiv = createDiv('');  // vide au départ
             ligneDiv.addClass('item-classement-joueurs');
             this.classementJoueursDiv.child(ligneDiv);
             this.lignesJoueursDiv.push(ligneDiv);
@@ -155,7 +150,7 @@ class Vue {
             const joueur = classement[i];
             const ligneDiv = this.lignesJoueursDiv[i];
             ligneDiv.html(`${joueur.nom} (${joueur.points})`);
-            ligneDiv.style('color', `hsl(${joueur.couleur[0]}, ${joueur.couleur[1]}%, ${joueur.couleur[2] / 2}%)`);
+           // ligneDiv.style('color', `hsl(${joueur.couleur[0]}, ${joueur.couleur[1]}%, ${joueur.couleur[2] / 2}%)`);
         }
 
         // Si on a trop de lignes (ex: moins de joueurs que la frame précédente)
@@ -541,7 +536,7 @@ class Vue {
         this.tourActuelDiv.html('Tour ' + str(this.controleur.jeuNumeroTour));
     }
 
-    initialiserCentrerGrille() {
+    /*initialiserCentrerGrille() {
         this.conteneurRecentrerDiv = createDiv();
         this.conteneurRecentrerDiv.addClass('conteneur-bouton-recentrer');
 
@@ -554,7 +549,7 @@ class Vue {
 
     afficherRecentrer() {
         this.conteneurRecentrerDiv.show();
-    }
+    }*/
 
     initialiserFinManche() {
         this.nouvellePartieFinMancheButton;
@@ -645,12 +640,12 @@ class Vue {
         this.classementJoueursPartieDiv.hide();
     }
 
-    initialiserIconesMotifs() {
+    /*initialiserIconesMotifs() {
         this.conteneurIconesMotifsDiv = createDiv();
         this.conteneurIconesMotifsDiv.addClass('conteneur-icones-etampes');
         // this.conteneurIconesMotifsDiv.hide();
 
-        this.iconeMotifPlaneurImg = createImg('images/motifPlaneur.png');
+        /*this.iconeMotifPlaneurImg = createImg('images/motifPlaneur.png');
         this.iconeMotifPlaneurImg.style('order', '0');
         this.iconeMotifPlaneurImg.addClass('icone-etampe');
 
@@ -664,17 +659,17 @@ class Vue {
 
         this.iconeMotifHWSSImg = createImg('images/motifHWSS.png');
         this.iconeMotifHWSSImg.style('order', '3');
-        this.iconeMotifHWSSImg.addClass('icone-etampe');
+        this.iconeMotifHWSSImg.addClass('icone-etampe');*/
 
         // Regroupement des icones des n motifs dans un tableau (anciennement "icones")
-        this.iconesMotifsImg = selectAll('.icone-etampe');
+        //this.iconesMotifsImg = selectAll('.icone-etampe');
 
-        for (let i = 0; i < this.iconesMotifsImg.length; i++) {
+        /*for (let i = 0; i < this.iconesMotifsImg.length; i++) {
             this.iconesMotifsImg[i].style('background-color', 'var(--beige)');
             this.iconesMotifsImg[i].mousePressed(() => this.activerMotif(i));
-        }
+        }*/
 
-        this.iconeRotationMotifImg = createImg('images/iconeRotation.png');
+        /*this.iconeRotationMotifImg = createImg('images/iconeRotation.png');
         this.iconeRotationMotifImg.style('order', '4');
         this.iconeRotationMotifImg.addClass('icone-etampe');
         this.iconeRotationMotifImg.style('background-color', 'var(--beige)');
@@ -699,10 +694,10 @@ class Vue {
         this.conteneurIconesMotifsDiv.child(this.iconeMotifHWSSImg);
         this.conteneurIconesMotifsDiv.child(this.iconeRotationMotifImg);
         this.conteneurIconesMotifsDiv.child(this.iconeAleatoireImg);
-    }
+    }*/
 
     activerMotif(index) {
-        this.reinitialiserIcones();
+        //this.reinitialiserIcones();
         this.controleur.motifPixelActif = false;
         this.controleur.blocAleatoireActif = false;
         this.controleur.motifActuelIndex = index;
@@ -727,12 +722,13 @@ class Vue {
         }
     }
 
-    reinitialiserIcones() {
+    /*reinitialiserIcones() {
         this.iconeMotifPixelImg.style('background-color', 'var(--beige)');
         this.iconeAleatoireImg.style('background-color', 'var(--beige)');
         for (let i = 0; i < this.iconesMotifsImg.length; i++) {
             this.iconesMotifsImg[i].style('background-color', 'var(--beige)');
         }
-    }
+    }*/
 }
 
+console.log('allo');
