@@ -4,15 +4,13 @@ const Controleur = require('./Controleur');
 
 let controleur;
 
-let lignes = 45;
-let colonnes = 95;
-
-controleur = new Controleur(colonnes, lignes, 200);
-let nbJoueurs = 2;
-controleur.nouvellePartie(nbJoueurs);
-controleur.genererGrilleAleatoire(nbJoueurs);
+let lignes = 100;
+let colonnes = 200;
+controleur = new Controleur(colonnes, lignes, 100);
 
 let joueursId = [];
+controleur.nouvellePartie();
+// controleur.genererGrilleAleatoire();
 
 // Importation du module Express
 let express = require('express');
@@ -27,9 +25,16 @@ let io = socket(server);
 io.sockets.on('connection', nouvelleConnexion);
 
 function nouvelleConnexion(socket) {
+    // Ne pas accepter de nouvelle connexion lorsque le serveur contient 20 joueurs
+    if (controleur.obtenirNombreJoueur() >= 20) {
+        return;
+    }
+    controleur.ajouterJoueur(socket.id);
+    console.log("ID du joueur : " + controleur.joueurs[socket.id].id);
+
     joueursId.push(socket.id);
 
-    console.log('Nouvelle connexion : ' + socket.id);
+    controleur.genererGrilleAleatoire();
 
     let grille = controleur.obtenirGrille();
     let grilleTerritoire = controleur.obtenirGrilleTerritoire();
@@ -44,14 +49,18 @@ function nouvelleConnexion(socket) {
     socket.on('modificationGrille', modificationGrille);
 
     function modificationGrille(position) {
-        let joueurId = joueursId.indexOf(socket.id);
+        // let joueurId = joueursId.indexOf(socket.id);
+        let joueurId = controleur.joueurs[socket.id].id;
+        let joueurEtat = controleur.joueurs[socket.id].etat;
+        let joueurNom = controleur.joueurs[socket.id].nom;
         console.log("Position : ");
         console.log(position);
-        console.log("Socket : " + socket.id + " (joueur " + (joueurId + 1) + ")");
+        // console.log("Socket : " + socket.id + " (joueur " + (joueurId + 1) + ")");
+        console.log("Joueur ID | Nom | État : " + joueurId + " | " + joueurNom + " | " + joueurEtat);
         let cellX = position.x;
         let cellY = position.y;
         if (cellX >= 0 && cellX < colonnes && cellY >= 0 && cellY < lignes) {
-            controleur.modifierCellule(cellX, cellY, joueurId + 1);
+            controleur.modifierCellule(cellX, cellY, joueurEtat);
         }
 
         let grille = controleur.obtenirGrille();

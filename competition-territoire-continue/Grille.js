@@ -14,6 +14,7 @@ class Grille {
 
     static initialiserCompetition(lignes = 50, colonnes = 25, nbJoueurs) {
         let grille = new Grille(lignes, colonnes);
+        if (nbJoueurs === 0) return grille;
         for (let i = 0; i < lignes; i++) {
             for (let j = 0; j < colonnes; j++) {
                 if (Math.random() <= 0.15) {
@@ -22,7 +23,6 @@ class Grille {
                 }
             }
         }
-        return grille;
     }
 
     get lignes() {
@@ -76,12 +76,14 @@ class Grille {
     }
 
     // Générer une nouvelle grille aléatoire
-    genererAleatoire(nbJoueurs = 4, densite = 0.25) {
+    genererAleatoire(etatsJoueurs, densite = 0.25) {
         // Initialisation aléatoire
         for (let i = 0; i < this.lignes; i++) {
             for (let j = 0; j < this.colonnes; j++) {
                 if (Math.random() < densite) {
-                    this.modifierCellule(i, j, Math.floor(1 + nbJoueurs * Math.random()));
+                    let indexAlea = Math.floor(Math.random() * etatsJoueurs.length);
+                    let etatAlea = etatsJoueurs[indexAlea];
+                    this.modifierCellule(i, j, etatAlea);
                 }
             }
         }

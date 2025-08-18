@@ -4,17 +4,28 @@ class Vue {
         this.grilleTerritoire = grilleTerritoire;
         this.colonnes = grille.length;
         this.lignes = grille[0].length;
+
         this.tailleCellule = tailleCellule;     // taille d’une cellule à zoom 1
         this.zoom = 1;                          // facteur de zoom
         this.decalageX = 0;                     // décalage horizontal coin supérieur gauche
         this.decalageY = 0;                     // décalage vertical coin supérieur gauche
-        this.couleursEtats = {                  // couleurs des états des cellules de la grille
-            0: color(0, 0, 95),                  // cellule blanche-grise
-            1: color(0, 100, 100)
+
+        this.couleursEtats = {
+            0: color(0, 0, 90),
         };
-        this.couleurBordure = color(240);  // couleur de la bordure de la grille
+        for (let k = 1; k <= 20; k++) {
+            this.couleursEtats[k] = color(20 * k, 100, 90);
+        }
+        this.couleursTerritoire = {
+            0: color(0, 0, 95),
+        };
+        for (let k = 1; k <= 20; k++) {
+            this.couleursTerritoire[k] = color(20 * k, 20, 100);
+        }
+
+        this.couleurBordure = color(0, 0, 100);  // couleur de la bordure de la grille
         this.epaisseurBordure = 1;              // épaisseur de la bordure de la grille
-        this.couleurFond = color(0, 0, 30);  // couleur de fond à l'extérieur de la grille
+        this.couleurFond = color(0, 0, 20);  // couleur de fond à l'extérieur de la grille
         this.etatJeu = "enMarche"           //État actuel du jeu (chancge selon ce qu'il y a à afficher)
 
         this.controleur = null;
@@ -108,22 +119,30 @@ class Vue {
         const tailleAffichee = this.tailleCellule * this.zoom;
         for (let i = 0; i < this.colonnes; i++) {
             for (let j = 0; j < this.lignes; j++) {
+                if (this.grille[i][j] === 0) {
+                    fill(this.couleursTerritoire[this.grilleTerritoire[i][j]]);
+                } else {
+                    fill(this.couleursEtats[this.grille[i][j]]);
+                }
+
+                /*
                 switch (this.grille[i][j]) {
                     case 0:
-                        fill(228);
+                        fill(this.couleursEtats[0]);
                         if (this.grilleTerritoire[i][j] === 1) {
-                            fill(255, 200, 200)
+                            fill(this.couleursEtats[1]);
                         } else if (this.grilleTerritoire[i][j] === 2) {
-                            fill(200, 200, 255)
+                            fill(this.couleursEtats[2]);
                         }
                         break;
                     case 1:
-                        fill(255, 50, 50);
+                        fill(this.couleursEtats[1]);
                         break;
                     case 2:
-                        fill(50, 50, 255);
+                        fill(this.couleursEtats[2]);
                         break;
                 }
+                */
 
                 const x = i * tailleAffichee + this.decalageX;
                 const y = j * tailleAffichee + this.decalageY;

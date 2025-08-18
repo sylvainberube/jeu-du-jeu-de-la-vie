@@ -4,6 +4,7 @@ initialisationFaite = false;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  colorMode(HSB, 360, 100, 100, 100);
 
   socket = io.connect('http://localhost:3000');
   socket.on('initialisation', recevoirInitinalisation);
@@ -11,24 +12,24 @@ function setup() {
 }
 
 function draw() {
-  background(220, 100, 200);
-
+  background(0, 0, 30);
   if (initialisationFaite) {
+    background(vue.couleurFond);
     vue.afficher();
   }
 
   // Déplacement de la vue
   if (keyIsDown(UP_ARROW)) {
-    vue.modifierDecalage(0, -20);
-  }
-  if (keyIsDown(RIGHT_ARROW)) {
-    vue.modifierDecalage(20, 0);
-  }
-  if (keyIsDown(DOWN_ARROW)) {
     vue.modifierDecalage(0, 20);
   }
-  if (keyIsDown(LEFT_ARROW)) {
+  if (keyIsDown(RIGHT_ARROW)) {
     vue.modifierDecalage(-20, 0);
+  }
+  if (keyIsDown(DOWN_ARROW)) {
+    vue.modifierDecalage(0, -20);
+  }
+  if (keyIsDown(LEFT_ARROW)) {
+    vue.modifierDecalage(20, 0);
   }
 }
 
