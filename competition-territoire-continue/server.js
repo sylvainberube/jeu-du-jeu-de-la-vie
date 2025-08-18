@@ -86,6 +86,7 @@ function nouvelleConnexion(socket) {
 // Simulation d'une nouvelle génération
 function calculerGenerationSuivante() {
     controleur.calculerGenerationSuivante();
+    classement = controleur.obtenirClassementJoueurs();
     /*
     // Initialiser toutes les cellules à 0
     let grilleGenerationSuivante = Array.from({ length: colonnes }, () => Array(lignes).fill(0));
@@ -108,6 +109,8 @@ function calculerGenerationSuivante() {
         }
     }
     */
+
+    /*
     let grille = controleur.obtenirGrille();
     let grilleTerritoire = controleur.obtenirGrilleTerritoire();
     let data = {
@@ -115,6 +118,17 @@ function calculerGenerationSuivante() {
         'grilleTerritoire': grilleTerritoire,
     }
     io.sockets.emit('grille', data);
+    */
+
+    let grille = Array.from(controleur.obtenirGrille());
+    let grilleTerritoire = controleur.obtenirGrilleTerritoire();
+    dataUpdate = {
+        'grille' : grille,
+        'grilleTerritoire' : grilleTerritoire,
+        'classement' : classement
+    }
+    io.sockets.emit('update', dataUpdate);
+
 }
 
 /*

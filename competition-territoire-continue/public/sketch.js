@@ -1,7 +1,11 @@
+/*
 let lignes;
 let colonnes;
 let cellules = [];
 let cellulesTerritoire = [];
+*/
+
+let vue;
 
 initialisationFaite = false;
 
@@ -10,14 +14,14 @@ function setup() {
 
   socket = io.connect('http://localhost:3000');
   socket.on('initialisation', recevoirInitinalisation);
-  socket.on('grille', recevoirGrille);
+  socket.on('update', recevoirUpdate);
 }
 
 function draw() {
   background(220, 100, 200);
 
   if (initialisationFaite) {
-    afficherGrille();
+    vue.afficher();
   }
 }
 
@@ -31,20 +35,33 @@ function mousePressed() {
 }
 
 function recevoirInitinalisation(dataInit) {
+    /*
     cellules = Array.from(dataInit.grille);
     cellulesTerritoire = Array.from(dataInit.grilleTerritoire);
     lignes = dataInit.lignes;
     colonnes = dataInit.colonnes;
+    */
+    let cellules = Array.from(dataInit.grille);
+    let cellulesTerritoire = Array.from(dataInit.grilleTerritoire);
+    vue = new Vue(cellules, cellulesTerritoire);
     
     initialisationFaite = true;
 }
 
-function recevoirGrille(data) {
+/*function recevoirGrille(data) {
   cellules = Array.from(data.grille);
   cellulesTerritoire = Array.from(data.grilleTerritoire);
 }
+*/
 
-function afficherGrille() {
+function recevoirUpdate(data) {
+  vue.grille = Array.from(data.grille);
+  vue.grilleTerritoire = Array.from(data.grilleTerritoire);
+  vue.classement = data.classement;
+
+}
+
+/*function afficherGrille() {
   stroke(240);
   strokeWeight(1);
 
@@ -71,4 +88,4 @@ function afficherGrille() {
       square(i * tailleCellule, j * tailleCellule, tailleCellule);
     }
   }
-}
+}*/

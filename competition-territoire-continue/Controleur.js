@@ -18,7 +18,7 @@ class Controleur {
         this.intervalle = intervalle; // en ms
         this.derniereMiseAJour = 0;
 
-        this.nbJoueurs = 10;
+        this.nbJoueurs = 2;
         this.joueursNoms = [];
         this.joueursCouleurs = [];
 
@@ -28,7 +28,7 @@ class Controleur {
         // - "partieInitialisation", "partieFin"
         // - "mancheInitialisation", "mancheFin"
         // - "tourAutomatique", "tourInteraction"
-        this.etatJeu = "accueil";
+        // this.etatJeu = "enMarche";
 
         // Suivi de la progression d'une partie, des manches et des tours
         this.jeuNumeroManche = 1;
@@ -104,9 +104,9 @@ class Controleur {
     }
 
     gestionDuJeu() {
-        background(this.couleurFond());
+        //background(this.couleurFond());
 
-        if (keyIsDown(UP_ARROW)) {
+        /*if (keyIsDown(UP_ARROW)) {
             this.vue.modifierDecalage(0, -20);
         }
         if (keyIsDown(RIGHT_ARROW)) {
@@ -117,7 +117,7 @@ class Controleur {
         }
         if (keyIsDown(LEFT_ARROW)) {
             this.vue.modifierDecalage(-20, 0);
-        }
+        } */
 
 
         switch (this.etatJeu) {
@@ -127,23 +127,8 @@ class Controleur {
             case "partieInitialisation":
                 this.gestionJeuPartieInitialisation();
                 break;
-            case "mancheInitialisation":
-                this.gestionJeuMancheInitialisation();
-                break;
-            case "tourInitialisation":
-                this.gestionJeuTourInitialisation();
-                break;
-            case "tourInteraction":
-                this.gestionJeuTourInteraction();
-                break;
-            case "tourAutomatique":
-                this.gestionJeuTourAutomatique();
-                break;
-            case "tourFin":
-                this.gestionJeuTourFin();
-                break;
-            case "mancheFin":
-                this.gestionJeuMancheFin();
+            case "enMarche":
+                this.gestionJeuEnMarche();
                 break;
             case "partieFin":
                 break;
@@ -179,115 +164,10 @@ class Controleur {
         this.etatJeu = "mancheInitialisation";
     }
 
-    gestionJeuMancheInitialisation() {
-        this.jeuNumeroTour = 1;
-        this.joueurTour = 1;                    // Index du joueur dans tourInteraction
 
-        this.grille = Grille.initialiserCompetition(this.lignes, this.colonnes, this.nbJoueurs);
-        this.simulateur.grille = this.grille;
-        this.vue.grille = this.grille;
-        for (let i = 0; i < this.nbJoueurs; i++) {
-            this.vue.modifierCouleurEtat(i + 1, this.joueursCouleurs[i]);
-        }
-
-        let classementJoueurs = this.obtenirClassementJoueurs();
-        this.vue.afficherClassementJoueurs(classementJoueurs);
-        let classementJoueursPartie = this.obtenirClassementJoueursPartie();
-        this.vue.afficherClassementJoueursPartie(classementJoueursPartie);
-        this.vue.dessiner();
-
-        this.etatJeu = "tourInitialisation";
-    }
-
-    gestionJeuTourInitialisation() {
-        this.nbGenerationsTour = 0;
-        this.joueurTour = 1;
-        this.phaseActionJoueurTemps = millis();
-        this.phaseActionJoueur = false;
-        this.etatJeu = "tourInteraction";
-        this.vue.dessiner();
-    }
-
-    gestionJeuTourAutomatique() {
-        this.grillePeutEtreDeplace = true;
-        this.peutModifierCellule = false;
-
-        if (this.nbGenerationsTour >= this.nbGenerationsParTour) {
-            this.vue.dessiner();
-            this.etatJeu = "tourFin";
-            return;
-        }
-
-        if (!this.calculerGenerationSuivante()) {
-            this.vue.dessiner();
-            return;
-        }
-
-        this.nbGenerationsTour += 1;
-
-        let classementJoueurs = this.obtenirClassementJoueurs();
-        this.vue.afficherClassementJoueurs(classementJoueurs);
-        let classementJoueursPartie = this.obtenirClassementJoueursPartie();
-        this.vue.afficherClassementJoueursPartie(classementJoueursPartie);
-        this.verifierFinPartie(classementJoueurs);
-        this.vue.dessiner();
-    }
-
-    gestionJeuTourInteraction() {
-        // Toujours utile?
-        this.grillePeutEtreDeplace = false;
-        this.peutModifierCellule = false;
-
-        // Afficher le classement des joueurs
-        let classementJoueurs = this.obtenirClassementJoueurs();
-        this.vue.afficherClassementJoueurs(classementJoueurs);
-        let classementJoueursPartie = this.obtenirClassementJoueursPartie();
-        this.vue.afficherClassementJoueursPartie(classementJoueursPartie);
-
-        // Dessiner la grille
-        this.vue.dessiner();
-
-        // Le joueur peut modifier la grille
-        if (this.phaseActionJoueur) {
-            this.peutModifierCellule = true;
-            this.vue.afficherTempsRestant();
-            // Afficher le motif sélectionné (actuel)
-            if (this.motifActuelIndex != null) {
-                let grilleMotif = this.grillesMotifs[this.motifActuelIndex];
-                this.vue.afficherMotif(grilleMotif, mouseX, mouseY);
-            }
-            if (millis() - this.phaseActionJoueurTemps >= this.phaseActionTemps) {
-                if (this.joueurTour == this.nbJoueurs) {
-                    this.etatJeu = "tourAutomatique";
-                } else {
-                    this.joueurTour += 1;
-                    this.phaseActionJoueur = false;
-                    this.phaseActionJoueurTemps = millis();
-                }
-            }
-        }
-        // Affichage de la diapo du tour
-        else {
-            this.vue.afficherDiapoTour();
-            let couleur = this.hsbToHsl(this.joueursCouleurs[this.joueurTour - 1]);
-            this.vue.texteTourDiv.style('color', 'hsl(' + str(couleur[0]) + ', ' + str(couleur[1]) + '%, ' + str(couleur[2]) + '%)');
-            this.vue.texteTourDiv.html("C'est le tour de " + this.joueursNoms[this.joueurTour - 1]);
-        }
-    }
-
-    gestionJeuTourFin() {
-        this.grillePeutEtreDeplace = true;
-        this.peutModifierCellule = false;
-
-        if (this.jeuNumeroTour == this.nbToursMax) {
-            this.transitionMancheFin();
-        }
-        else {
-            this.jeuNumeroTour += 1;
-            this.phaseActionJoueur = false;
-            this.etatJeu = "tourInitialisation";
-        }
-        this.vue.dessiner();
+    gestionJeuEnMarche() {
+        this.calculerGenerationSuivante();
+        console.log('oui oui');
     }
 
     gestionJeuMancheFin() {
@@ -595,7 +475,6 @@ class Controleur {
 
         // Trier par points décroissants
         classement.sort((a, b) => b.points - a.points);
-
         return classement;
     }
 
