@@ -1,5 +1,3 @@
-// const Grille = require('./Grille');
-
 class Vue {
     constructor(grille, grilleTerritoire, tailleCellule = 20) {
         this.grille = grille;
@@ -14,7 +12,7 @@ class Vue {
             0: color(0, 0, 95),                  // cellule blanche-grise
             1: color(0, 100, 100)
         };
-        this.couleurBordure = color(0, 0, 90);        // couleur de la bordure de la grille
+        this.couleurBordure = color(240);  // couleur de la bordure de la grille
         this.epaisseurBordure = 1;              // épaisseur de la bordure de la grille
         this.couleurFond = color(0, 0, 30);  // couleur de fond à l'extérieur de la grille
         this.etatJeu = "enMarche"           //État actuel du jeu (chancge selon ce qu'il y a à afficher)
@@ -104,9 +102,10 @@ class Vue {
     }
 
     afficherGrille() {
-        stroke(240);
-        strokeWeight(1);
+        stroke(this.couleurBordure);
+        strokeWeight(this.epaisseurBordure);
 
+        const tailleAffichee = this.tailleCellule * this.zoom;
         for (let i = 0; i < this.colonnes; i++) {
             for (let j = 0; j < this.lignes; j++) {
                 switch (this.grille[i][j]) {
@@ -125,7 +124,10 @@ class Vue {
                         fill(50, 50, 255);
                         break;
                 }
-                square(i * this.tailleCellule, j * this.tailleCellule, this.tailleCellule);
+
+                const x = i * tailleAffichee + this.decalageX;
+                const y = j * tailleAffichee + this.decalageY;
+                square(x, y, tailleAffichee);
             }
         }
     }

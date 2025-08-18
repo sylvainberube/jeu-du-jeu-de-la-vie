@@ -1,10 +1,3 @@
-/*
-let lignes;
-let colonnes;
-let cellules = [];
-let cellulesTerritoire = [];
-*/
-
 let vue;
 
 initialisationFaite = false;
@@ -23,69 +16,64 @@ function draw() {
   if (initialisationFaite) {
     vue.afficher();
   }
+
+  // Déplacement de la vue
+  if (keyIsDown(UP_ARROW)) {
+    vue.modifierDecalage(0, -20);
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+    vue.modifierDecalage(20, 0);
+  }
+  if (keyIsDown(DOWN_ARROW)) {
+    vue.modifierDecalage(0, 20);
+  }
+  if (keyIsDown(LEFT_ARROW)) {
+    vue.modifierDecalage(-20, 0);
+  }
 }
 
+// Action sur une cellule (à modifier avec les motifs)
 function mousePressed() {
+  cellule = vue.pixelVersCellule(mouseX, mouseY);
   let position = {
-    x: mouseX,
-    y: mouseY
+    x: cellule[0],
+    y: cellule[1]
   }
+  print("Cellule : " + position.x + " " + position.y);
 
   socket.emit('modificationGrille', position);
 }
 
-function recevoirInitinalisation(dataInit) {
-    /*
-    cellules = Array.from(dataInit.grille);
-    cellulesTerritoire = Array.from(dataInit.grilleTerritoire);
-    lignes = dataInit.lignes;
-    colonnes = dataInit.colonnes;
-    */
-    let cellules = Array.from(dataInit.grille);
-    let cellulesTerritoire = Array.from(dataInit.grilleTerritoire);
-    vue = new Vue(cellules, cellulesTerritoire);
-    
-    initialisationFaite = true;
+function mouseWheel(event) {
+  if (event.delta < 0) {
+    vue.augmenterZoom(mouseX, mouseY);
+  } else if (event.delta > 0) {
+    vue.diminuerZoom(mouseX, mouseY);
+  }
 }
 
-/*function recevoirGrille(data) {
-  cellules = Array.from(data.grille);
-  cellulesTerritoire = Array.from(data.grilleTerritoire);
+function keyPressed() {
+  if (keyCode === LEFT_ARROW) {
+    vue.modifierDecalage(-10, 0);
+  } else if (keyCode === RIGHT_ARROW) {
+    console.log("Flèche droite");
+  } else if (keyCode === UP_ARROW) {
+    console.log("Flèche haut");
+  } else if (keyCode === DOWN_ARROW) {
+    console.log("Flèche bas");
+  }
 }
-*/
+
+function recevoirInitinalisation(dataInit) {
+  let cellules = Array.from(dataInit.grille);
+  let cellulesTerritoire = Array.from(dataInit.grilleTerritoire);
+  vue = new Vue(cellules, cellulesTerritoire);
+
+  initialisationFaite = true;
+}
 
 function recevoirUpdate(data) {
   vue.grille = Array.from(data.grille);
   vue.grilleTerritoire = Array.from(data.grilleTerritoire);
   vue.classement = data.classement;
-
 }
-
-/*function afficherGrille() {
-  stroke(240);
-  strokeWeight(1);
-
-  let tailleCellule = 20;
-
-  for (let i = 0; i < colonnes; i++) {
-    for (let j = 0; j < lignes; j++) {
-      switch (cellules[i][j]) {
-        case 0:
-          fill(228);
-          if (cellulesTerritoire[i][j] === 1) {
-            fill(255, 200, 200)
-          } else if (cellulesTerritoire[i][j] === 2) {
-            fill(200, 200, 255)
-          }
-          break;
-        case 1:
-          fill(255, 50, 50);
-          break;
-        case 2:
-          fill(50, 50, 255);
-          break;
-      }
-      square(i * tailleCellule, j * tailleCellule, tailleCellule);
-    }
-  }
-}*/
