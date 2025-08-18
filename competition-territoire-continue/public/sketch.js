@@ -1,6 +1,7 @@
 let lignes;
 let colonnes;
 let cellules = [];
+let cellulesTerritoire = [];
 
 initialisationFaite = false;
 
@@ -31,18 +32,20 @@ function mousePressed() {
 
 function recevoirInitinalisation(dataInit) {
     cellules = Array.from(dataInit.grille);
+    cellulesTerritoire = Array.from(dataInit.grilleTerritoire);
     lignes = dataInit.lignes;
     colonnes = dataInit.colonnes;
     
     initialisationFaite = true;
 }
 
-function recevoirGrille(cellulesServeur) {
-  cellules = Array.from(cellulesServeur);
+function recevoirGrille(data) {
+  cellules = Array.from(data.grille);
+  cellulesTerritoire = Array.from(data.grilleTerritoire);
 }
 
 function afficherGrille() {
-  stroke(192);
+  stroke(240);
   strokeWeight(1);
 
   let tailleCellule = 20;
@@ -51,13 +54,18 @@ function afficherGrille() {
     for (let j = 0; j < lignes; j++) {
       switch (cellules[i][j]) {
         case 0:
-          fill(32);
+          fill(228);
+          if (cellulesTerritoire[i][j] === 1) {
+            fill(255, 200, 200)
+          } else if (cellulesTerritoire[i][j] === 2) {
+            fill(200, 200, 255)
+          }
           break;
         case 1:
-          fill(255, 100, 100);
+          fill(255, 50, 50);
           break;
         case 2:
-          fill(100, 100, 255);
+          fill(50, 50, 255);
           break;
       }
       square(i * tailleCellule, j * tailleCellule, tailleCellule);

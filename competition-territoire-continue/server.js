@@ -8,7 +8,7 @@ let colonnes = 100;
 let lignes = 100;
 // let cellules = Array.from({ length: colonnes }, () => Array(lignes).fill(0));
 
-controleur = new Controleur(lignes, colonnes, 100);
+controleur = new Controleur(lignes, colonnes, 200);
 let nbJoueurs = 2;
 controleur.nouvellePartie(nbJoueurs);
 controleur.genererGrilleAleatoire(nbJoueurs);
@@ -48,12 +48,13 @@ function nouvelleConnexion(socket) {
     console.log('Nouvelle connexion : ' + socket.id);
 
     let grille = controleur.obtenirGrille();
+    let grilleTerritoire = controleur.obtenirGrilleTerritoire();
     dataInit = {
         'grille': grille,
+        'grilleTerritoire': grilleTerritoire,
         'colonnes': colonnes,
         'lignes': lignes
     }
-
     io.sockets.emit('initialisation', dataInit);
 
     socket.on('modificationGrille', modificationGrille);
@@ -71,7 +72,14 @@ function nouvelleConnexion(socket) {
         }
 
         // io.sockets.emit('grille', controleurcellules);
-        io.sockets.emit('grille', controleur.obtenirGrille());
+
+        let grille = controleur.obtenirGrille();
+        let grilleTerritoire = controleur.obtenirGrilleTerritoire();
+        data = {
+            'grille': grille,
+            'grilleTerritoire': grilleTerritoire,
+        }
+        io.sockets.emit('grille', data);
     }
 }
 
@@ -100,8 +108,13 @@ function calculerGenerationSuivante() {
         }
     }
     */
-    grille = Array.from(controleur.obtenirGrille());
-    io.sockets.emit('grille', grille);
+    let grille = controleur.obtenirGrille();
+    let grilleTerritoire = controleur.obtenirGrilleTerritoire();
+    let data = {
+        'grille': grille,
+        'grilleTerritoire': grilleTerritoire,
+    }
+    io.sockets.emit('grille', data);
 }
 
 /*

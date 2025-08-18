@@ -91,6 +91,10 @@ class Controleur {
         return this.grille.getCellules();
     }
 
+    obtenirGrilleTerritoire() {
+        return this.grille.getCellulesTerritoire();
+    }
+
     genererGrilleAleatoire(nbJoueurs = 2) {
         this.grille.genererAleatoire(nbJoueurs);
     }
@@ -505,7 +509,7 @@ class Controleur {
     reinitialiserGrille() {
         this.nbGenerations = 0;
         this.derniereMiseAJour = millis();
-        this.grille.remplacerCellules(this.grilleInitiale.cellules);
+        this.grille.remplacerCellules(this.grilleInitiale.cellules, this.grilleInitiale.cellules);
     }
 
     accueil() {

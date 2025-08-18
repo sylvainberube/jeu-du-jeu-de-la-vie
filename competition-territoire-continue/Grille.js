@@ -2,12 +2,14 @@ class Grille {
     lignes;
     colonnes;
     cellules;
+    cellulesTerritoire;
     typeMonde;
     constructor(lignes = 75, colonnes = 75, typeMonde = "torique") {
         this.lignes = lignes;
         this.colonnes = colonnes;
         this.typeMonde = typeMonde;        // "plat", "torique"
         this.cellules = Array.from({ length: lignes }, () => Array(colonnes).fill(0));  // Initialiser toutes les cellules à 0
+        this.cellulesTerritoire = Array.from({ length: lignes }, () => Array(colonnes).fill(0));
     }
 
     static initialiserCompetition(lignes = 50, colonnes = 25, nbJoueurs) {
@@ -16,6 +18,7 @@ class Grille {
             for (let j = 0; j < colonnes; j++) {
                 if (Math.random() <= 0.00) {
                     grille.cellules[i][j] = Math.floor(1 + nbJoueurs * Math.random());
+                    grille.cellulesTerritoire[i][j] = grille.cellules[i][j];
                 }
             }
         }
@@ -34,6 +37,10 @@ class Grille {
         return this.cellules;
     }
 
+    getCellulesTerritoire() {
+        return this.cellulesTerritoire;
+    }
+
     // Obtenir l'état d'une cellule
     obtenirEtatCellule(ligne, colonne) {
         if (ligne >= 0 && ligne < this.lignes && colonne >= 0 && colonne < this.colonnes) {
@@ -41,23 +48,35 @@ class Grille {
         }
     }
 
+    // Obtenir le territoire d'une cellule
+    obtenirTerritoireCellule(ligne, colonne) {
+        if (ligne >= 0 && ligne < this.lignes && colonne >= 0 && colonne < this.colonnes) {
+            return this.cellulesTerritoire[ligne][colonne];
+        }
+    }
+
     // Modifier l'état d'une cellule
     modifierCellule(ligne, colonne, etat) {
+        if (etat != 0) {
+            this.cellulesTerritoire[ligne][colonne] = etat;
+        }
         this.cellules[ligne][colonne] = etat;
     }
 
     // Remplacer la grille
-    remplacerCellules(cellules) {
+    remplacerCellules(cellules, cellulesTerritoire) {
         this.cellules = cellules;
+        this.cellulesTerritoire = cellulesTerritoire;
     }
 
     // Effacer la grille (réinitialiser à 0 partout)
     effacerGrille() {
         this.cellules = Array.from({ length: this.lignes }, () => Array(this.colonnes).fill(0));  // Initialiser toutes les cellules à 0
+        this.cellulesTerritoire = Array.from({ length: this.lignes }, () => Array(this.colonnes).fill(0));  // Initialiser toutes les cellules à 0
     }
 
     // Générer une nouvelle grille aléatoire
-    genererAleatoire(nbJoueurs = 4, densite = 0.4) {
+    genererAleatoire(nbJoueurs = 4, densite = 0.15) {
         // Initialisation aléatoire
         for (let i = 0; i < this.lignes; i++) {
             for (let j = 0; j < this.colonnes; j++) {
@@ -136,6 +155,7 @@ class Grille {
         for (let i = 0; i < motif.lignes; i++) {
             for (let j = 0; j < motif.colonnes; j++) {
                 this.cellules[i + ligneHaut][j + colonneGauche] = motif.cellules[i][j];
+                // this.cellulesTerritoire[i + ligneHaut][j + colonneGauche] = motif.cellules[i][j];
             }
         }
         return;
@@ -147,7 +167,7 @@ class Grille {
         let centreLigne = Math.floor(this.lignes / 2);
         let centreColonne = Math.floor(this.colonnes / 2);
 
-        this.ajouterMotif(motif, centreLigne, centreColonne);
+        // this.ajouterMotif(motif, centreLigne, centreColonne);
     }
 
     compterCellulesParEtat() {

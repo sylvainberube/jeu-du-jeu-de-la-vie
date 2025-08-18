@@ -14,29 +14,40 @@ class Simulateur {
         const colonnes = this.grille.colonnes;
 
         // Initialiser toutes les cellules à 0
-        let gilleGenerationSuivante = Array.from({ length: lignes }, () => Array(colonnes).fill(0));
+        let grilleGenerationSuivante = Array.from({ length: lignes }, () => Array(colonnes).fill(0));
+        let grilleGenerationSuivanteTerritoire = Array.from({ length: lignes }, () => Array(colonnes).fill(0));
 
         for (let i = 0; i < this.grille.lignes; i++) {
             for (let j = 0; j < this.grille.colonnes; j++) {
                 let etatsVoisins = this.grille.obtenirEtatsVoisins(i, j);
-                const nbVoisinesVivantes = etatsVoisins.length;
+                let nbVoisinesVivantes = etatsVoisins.length;
                 const etatActuel = this.grille.obtenirEtatCellule(i, j);
+                const territoireActuel = this.grille.obtenirTerritoireCellule(i, j);
 
                 // Naissance
                 if (etatActuel === 0 && this.#regleNaissances.includes(nbVoisinesVivantes)) {
                     if (nbVoisinesVivantes > 0) {
-                        gilleGenerationSuivante[i][j] = etatsVoisins[Math.floor(Math.random() * nbVoisinesVivantes)];
+                        grilleGenerationSuivante[i][j] = etatsVoisins[Math.floor(Math.random() * nbVoisinesVivantes)];
+                        grilleGenerationSuivanteTerritoire[i][j] = grilleGenerationSuivante[i][j];
                     } else if (nbVoisinesVivantes === 0) {
-                        gilleGenerationSuivante[i][j] = Math.floor(1 + Math.random() * nbJoueurs);
+                        grilleGenerationSuivante[i][j] = Math.floor(1 + Math.random() * nbJoueurs);
+                        grilleGenerationSuivanteTerritoire[i][j] = grilleGenerationSuivante[i][j];
                     }
                 }
-                
+                if (etatActuel === 0 && !this.#regleNaissances.includes(nbVoisinesVivantes)) {
+                    grilleGenerationSuivanteTerritoire[i][j] = territoireActuel;
+                }
+
                 // Survie
                 if (etatActuel >= 1 && this.#regleSurvie.includes(nbVoisinesVivantes)) {
-                    /*
                     etatsVoisins.push(etatActuel);
-                    gilleGenerationSuivante[i][j] = etatsVoisins[Math.floor(Math.random() * nbVoisinesVivantes)];
-                    */
+                    etatsVoisins.push(etatActuel);
+                    etatsVoisins.push(etatActuel);
+                    etatsVoisins.push(etatActuel);
+                    etatsVoisins.push(etatActuel);
+                    nbVoisinesVivantes = etatsVoisins.length;
+                    grilleGenerationSuivante[i][j] = etatsVoisins[Math.floor(Math.random() * nbVoisinesVivantes)];
+                    grilleGenerationSuivanteTerritoire[i][j] = grilleGenerationSuivante[i][j];
                     /*
                     if (etatsVoisins.includes(etatActuel)) {
                         gilleGenerationSuivante[i][j] = etatActuel;
@@ -46,13 +57,18 @@ class Simulateur {
                         gilleGenerationSuivante[i][j] = etatsVoisins[Math.floor(Math.random() * nbVoisinesVivantes)];
                     }
                     */
-                    gilleGenerationSuivante[i][j] = etatActuel;
+                    /*
+                    grilleGenerationSuivante[i][j] = etatActuel;
+                    grilleGenerationSuivanteTerritoire[i][j] = grilleGenerationSuivante[i][j];
+                    */
+                }
+                if (etatActuel >= 1 && !this.#regleSurvie.includes(nbVoisinesVivantes)) {
+                    grilleGenerationSuivanteTerritoire[i][j] = etatActuel;
                 }
             }
         }
-        this.grille.remplacerCellules(gilleGenerationSuivante);
+        this.grille.remplacerCellules(grilleGenerationSuivante, grilleGenerationSuivanteTerritoire);
     }
-
 }
 
 module.exports = Simulateur;
