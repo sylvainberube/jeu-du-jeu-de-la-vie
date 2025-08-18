@@ -7,8 +7,6 @@ class Controleur {
         this.colonnes = colonnes;
 
         this.grille = new Grille(lignes, colonnes);
-        // this.vue = new Vue(this.grille);
-        // this.vue.associerControleur(this);
         this.simulateur = new Simulateur(this.simulateur);
 
         this.grilleInitiale = Grille.copier(this.grille);
@@ -18,7 +16,13 @@ class Controleur {
         this.intervalle = intervalle; // en ms
         this.derniereMiseAJour = 0;
 
-        this.nbJoueurs = 2;
+        this.joueurs = {};
+        this.etatsDisponibles = [];
+        for (let i = 1; i <= 20; i++) {
+            this.etatsDisponibles.push(i);
+        }
+
+        this.nbJoueurs = 0;
         this.joueursNoms = [];
         this.joueursCouleurs = [];
 
@@ -95,8 +99,8 @@ class Controleur {
         return this.grille.getCellulesTerritoire();
     }
 
-    genererGrilleAleatoire(nbJoueurs = 2) {
-        this.grille.genererAleatoire(nbJoueurs);
+    genererGrilleAleatoire(nbJoueurs = 0) {
+        this.grille.genererAleatoire(this.obtenirEtatsJoueurs());
     }
 
     modifierCellule(celluleLigne, celluleColonne, etat) {
@@ -104,22 +108,6 @@ class Controleur {
     }
 
     gestionDuJeu() {
-        //background(this.couleurFond());
-
-        /*if (keyIsDown(UP_ARROW)) {
-            this.vue.modifierDecalage(0, -20);
-        }
-        if (keyIsDown(RIGHT_ARROW)) {
-            this.vue.modifierDecalage(20, 0);
-        }
-        if (keyIsDown(DOWN_ARROW)) {
-            this.vue.modifierDecalage(0, 20);
-        }
-        if (keyIsDown(LEFT_ARROW)) {
-            this.vue.modifierDecalage(-20, 0);
-        } */
-
-
         switch (this.etatJeu) {
             case "accueil":
                 this.gestionJeuAccueil();
@@ -396,21 +384,10 @@ class Controleur {
         this.etatJeu = "accueil";
     }
 
-    nouvellePartie(nbJoueurs = 0) {
-        this.nbJoueurs = nbJoueurs;
-        for (let i = 1; i <= nbJoueurs; i++) {
-            this.joueursNoms.push("Joueur" + i);
-            // let couleur = color((Math.floor((i - 1) / 5) * 36 + 2 * 36 * (i - 1)) % 360, 100, 75);
-            // this.joueursCouleurs.push(couleur);
-            // this.vue.modifierCouleurEtat(i, couleur);
-        }
-
+    nouvellePartie() {
+        let nbJoueurs = 0;
         this.grille = Grille.initialiserCompetition(this.lignes, this.colonnes, nbJoueurs);
         this.simulateur.grille = this.grille;
-        // this.vue.grille = this.grille;
-        // this.vue.centrerGrille();
-
-        // this.vue.dessiner();
     }
 
     couleurFond() {
@@ -629,6 +606,29 @@ class Controleur {
             }
         }
         return motifRotation
+    }
+
+    ajouterJoueur(joueurId) {
+        if (this.etatsDisponibles === 0) return null; // Déjà 20 joueurs
+        const index = Math.floor(Math.random() * this.etatsDisponibles.length);
+        const etatJoueur = this.etatsDisponibles[index];
+        this.etatsDisponibles.splice(index, 1);
+        const nomJoueur = "Joueur " + etatJoueur;
+
+        this.joueurs[joueurId] = {
+            id: joueurId,
+            nom: nomJoueur,
+            etat: etatJoueur,
+            coinways: 0
+        };
+    }
+
+    obtenirNombreJoueur() {
+        return Object.keys(this.joueurs).length;
+    }
+
+    obtenirEtatsJoueurs() {
+        return Object.values(this.joueurs).map(joueur => joueur.etat);
     }
 }
 
