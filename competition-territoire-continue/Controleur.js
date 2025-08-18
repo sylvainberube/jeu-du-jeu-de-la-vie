@@ -623,6 +623,14 @@ class Controleur {
         };
     }
 
+    supprimerJoueur(joueurId) {
+        // Retirer les états du joueur dans la grille
+        this.grille.supprimerEtat(this.joueurs[joueurId].etat);
+
+        // Retirer le joueur de la liste des joueurs
+        delete this.joueurs[joueurId];
+    }
+
     obtenirNombreJoueur() {
         return Object.keys(this.joueurs).length;
     }

@@ -203,6 +203,19 @@ class Grille {
         }
         return compteur;
     }
+
+    supprimerEtat(etat) {
+        for (let i = 0; i < this.lignes; i++) {
+            for (let j = 0; j < this.colonnes; j++) {
+                if (this.cellulesTerritoire[i][j] === etat) {
+                    this.cellulesTerritoire[i][j] = 0;
+                }
+                if (this.cellules[i][j] === etat) {
+                    this.cellules[i][j] = 0;
+                }
+            }
+        }
+    }
 }
 
 module.exports = Grille;
