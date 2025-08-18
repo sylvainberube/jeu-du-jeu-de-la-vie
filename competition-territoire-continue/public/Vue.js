@@ -95,32 +95,36 @@ class Vue {
     }
 
     afficher() {
-        switch(this.etatJeu) {
-            case ("enMarche") :
+        switch (this.etatJeu) {
+            case ("enMarche"):
                 this.afficherGrille();
                 this.afficherClassementJoueurs(this.classement);
-            break;
+                break;
         }
     }
 
     afficherGrille() {
-        stroke(192);
+        stroke(240);
         strokeWeight(1);
-
 
         for (let i = 0; i < this.colonnes; i++) {
             for (let j = 0; j < this.lignes; j++) {
                 switch (this.grille[i][j]) {
                     case 0:
-                        fill(32);
-                    break;
+                        fill(228);
+                        if (this.grilleTerritoire[i][j] === 1) {
+                            fill(255, 200, 200)
+                        } else if (this.grilleTerritoire[i][j] === 2) {
+                            fill(200, 200, 255)
+                        }
+                        break;
                     case 1:
-                        fill(255, 100, 100);
-                    break;
+                        fill(255, 50, 50);
+                        break;
                     case 2:
-                        fill(100, 100, 255);
-                    break;
-      }
+                        fill(50, 50, 255);
+                        break;
+                }
                 square(i * this.tailleCellule, j * this.tailleCellule, this.tailleCellule);
             }
         }
@@ -151,7 +155,7 @@ class Vue {
             const joueur = classement[i];
             const ligneDiv = this.lignesJoueursDiv[i];
             ligneDiv.html(`${joueur.nom} (${joueur.points})`);
-           // ligneDiv.style('color', `hsl(${joueur.couleur[0]}, ${joueur.couleur[1]}%, ${joueur.couleur[2] / 2}%)`);
+            // ligneDiv.style('color', `hsl(${joueur.couleur[0]}, ${joueur.couleur[1]}%, ${joueur.couleur[2] / 2}%)`);
         }
 
         // Si on a trop de lignes (ex: moins de joueurs que la frame précédente)
@@ -662,40 +666,40 @@ class Vue {
         this.iconeMotifHWSSImg.style('order', '3');
         this.iconeMotifHWSSImg.addClass('icone-etampe');*/
 
-        // Regroupement des icones des n motifs dans un tableau (anciennement "icones")
-        //this.iconesMotifsImg = selectAll('.icone-etampe');
+    // Regroupement des icones des n motifs dans un tableau (anciennement "icones")
+    //this.iconesMotifsImg = selectAll('.icone-etampe');
 
-        /*for (let i = 0; i < this.iconesMotifsImg.length; i++) {
-            this.iconesMotifsImg[i].style('background-color', 'var(--beige)');
-            this.iconesMotifsImg[i].mousePressed(() => this.activerMotif(i));
-        }*/
-
-        /*this.iconeRotationMotifImg = createImg('images/iconeRotation.png');
-        this.iconeRotationMotifImg.style('order', '4');
-        this.iconeRotationMotifImg.addClass('icone-etampe');
-        this.iconeRotationMotifImg.style('background-color', 'var(--beige)');
-        this.iconeRotationMotifImg.mousePressed(() => this.controleur.activerRotationMotifs());
-
-        this.iconeMotifPixelImg = createImg('images/iconePixel.png');
-        this.iconeMotifPixelImg.style('order', '5');
-        this.iconeMotifPixelImg.addClass('icone-etampe');
-        this.iconeMotifPixelImg.style('background-color', 'var(--blanc)');
-        this.iconeMotifPixelImg.mousePressed(() => this.controleur.activerMotifPixel());
-
-        this.iconeAleatoireImg = createImg('images/iconeAleatoire.png');
-        this.iconeAleatoireImg.style('order', '6');
-        this.iconeAleatoireImg.addClass('icone-etampe');
-        this.iconeAleatoireImg.style('background-color', 'var(--beige)');
-        this.iconeAleatoireImg.mousePressed(() => this.controleur.activerBlocAleatoire());
-
-        this.conteneurIconesMotifsDiv.child(this.iconeMotifPixelImg);
-        this.conteneurIconesMotifsDiv.child(this.iconeMotifPlaneurImg);
-        this.conteneurIconesMotifsDiv.child(this.iconeMotifLWSSImg);
-        this.conteneurIconesMotifsDiv.child(this.iconeMotifMWSSImg);
-        this.conteneurIconesMotifsDiv.child(this.iconeMotifHWSSImg);
-        this.conteneurIconesMotifsDiv.child(this.iconeRotationMotifImg);
-        this.conteneurIconesMotifsDiv.child(this.iconeAleatoireImg);
+    /*for (let i = 0; i < this.iconesMotifsImg.length; i++) {
+        this.iconesMotifsImg[i].style('background-color', 'var(--beige)');
+        this.iconesMotifsImg[i].mousePressed(() => this.activerMotif(i));
     }*/
+
+    /*this.iconeRotationMotifImg = createImg('images/iconeRotation.png');
+    this.iconeRotationMotifImg.style('order', '4');
+    this.iconeRotationMotifImg.addClass('icone-etampe');
+    this.iconeRotationMotifImg.style('background-color', 'var(--beige)');
+    this.iconeRotationMotifImg.mousePressed(() => this.controleur.activerRotationMotifs());
+
+    this.iconeMotifPixelImg = createImg('images/iconePixel.png');
+    this.iconeMotifPixelImg.style('order', '5');
+    this.iconeMotifPixelImg.addClass('icone-etampe');
+    this.iconeMotifPixelImg.style('background-color', 'var(--blanc)');
+    this.iconeMotifPixelImg.mousePressed(() => this.controleur.activerMotifPixel());
+
+    this.iconeAleatoireImg = createImg('images/iconeAleatoire.png');
+    this.iconeAleatoireImg.style('order', '6');
+    this.iconeAleatoireImg.addClass('icone-etampe');
+    this.iconeAleatoireImg.style('background-color', 'var(--beige)');
+    this.iconeAleatoireImg.mousePressed(() => this.controleur.activerBlocAleatoire());
+
+    this.conteneurIconesMotifsDiv.child(this.iconeMotifPixelImg);
+    this.conteneurIconesMotifsDiv.child(this.iconeMotifPlaneurImg);
+    this.conteneurIconesMotifsDiv.child(this.iconeMotifLWSSImg);
+    this.conteneurIconesMotifsDiv.child(this.iconeMotifMWSSImg);
+    this.conteneurIconesMotifsDiv.child(this.iconeMotifHWSSImg);
+    this.conteneurIconesMotifsDiv.child(this.iconeRotationMotifImg);
+    this.conteneurIconesMotifsDiv.child(this.iconeAleatoireImg);
+}*/
 
     activerMotif(index) {
         //this.reinitialiserIcones();
@@ -731,5 +735,3 @@ class Vue {
         }
     }*/
 }
-
-console.log('allo');

@@ -460,7 +460,8 @@ class Controleur {
     }
 
     obtenirClassementJoueurs() {
-        const pointsParId = this.grille.compterCellulesParEtat(); // ex: {0: 150, 1: 97, ...}
+        // const pointsParId = this.grille.compterCellulesParEtat(); // ex: {0: 150, 1: 97, ...}
+        const pointsParId = this.grille.compterTerritoireParEtat(); // ex: {0: 150, 1: 97, ...}
 
         let classement = [];
 

@@ -76,7 +76,7 @@ class Grille {
     }
 
     // Générer une nouvelle grille aléatoire
-    genererAleatoire(nbJoueurs = 4, densite = 0.15) {
+    genererAleatoire(nbJoueurs = 4, densite = 0.05) {
         // Initialisation aléatoire
         for (let i = 0; i < this.lignes; i++) {
             for (let j = 0; j < this.colonnes; j++) {
@@ -181,6 +181,22 @@ class Grille {
                     compteur[cellule] = 0;
                 }
                 compteur[cellule]++;
+            }
+        }
+        return compteur;
+    }
+
+    compterTerritoireParEtat() {
+        const compteur = {};
+
+        for (let i = 0; i < this.lignes; i++) {
+            for (let j = 0; j < this.colonnes; j++) {
+                const celluleTerritoire = this.cellulesTerritoire[i][j];
+
+                if (!(celluleTerritoire in compteur)) {
+                    compteur[celluleTerritoire] = 0;
+                }
+                compteur[celluleTerritoire]++;
             }
         }
         return compteur;
