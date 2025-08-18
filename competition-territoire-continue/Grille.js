@@ -16,7 +16,7 @@ class Grille {
         let grille = new Grille(lignes, colonnes);
         for (let i = 0; i < lignes; i++) {
             for (let j = 0; j < colonnes; j++) {
-                if (Math.random() <= 0.00) {
+                if (Math.random() <= 0.15) {
                     grille.cellules[i][j] = Math.floor(1 + nbJoueurs * Math.random());
                     grille.cellulesTerritoire[i][j] = grille.cellules[i][j];
                 }
