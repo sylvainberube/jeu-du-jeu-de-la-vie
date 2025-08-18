@@ -45,23 +45,6 @@ class Vue {
         this.commencerAccueilButton;
         this.initialiserAccueilInterface();
 
-        // Affichage du tour
-        this.diapoTour = new Diapo();
-        this.commencerTourButton;
-        this.texteTourDiv;
-        this.initialiserTourInterface();
-
-        // Affichage du temps restant dans un tour pendant les actions d'un joueur
-        this.tempsRestantDiv;
-        this.tourActuelDiv;
-        this.interieurTempsRestantDiv;
-        this.initialiserTempsRestant();
-
-        // Affichage du bouton de recentrement de la grille
-        this.conteneurCentrerGrilleDiv;
-        this.iconeCentrerGrilleImg;
-        //this.initialiserCentrerGrille();
-
         // Affichage de la fin d'une manche
         this.diapoFinManche = new Diapo();
         this.nouvellePartieFinMancheButton;
@@ -86,7 +69,11 @@ class Vue {
         this.iconeMotifHWSSImg;
         this.iconesMotifsImg;
         this.iconeRotationMotifImg;
-        //this.initialiserIconesMotifs();
+        this.initialiserIconesMotifs();
+
+        //Motifs
+        this.rotationMotifs = 0; // 0=0, 1=90, 2=180, 3=270
+        this.modeInterraction = "hwss";
     }
 
     // Associer le contrôleur à la vue
@@ -98,12 +85,20 @@ class Vue {
         switch (this.etatJeu) {
             case ("enMarche"):
                 this.afficherGrille();
+                this.afficherMotif(mouseX, mouseY, motifs[this.modeInterraction]);
                 this.afficherClassementJoueurs(this.classement);
                 break;
         }
     }
 
+    initialisationGlobale() {
+        this.initialiserClassement;
+        this.initialiserIconesMotifs;
+        print('appelé');
+    }
+
     afficherGrille() {
+        print("j'affiche");
         stroke(240);
         strokeWeight(1);
 
@@ -136,7 +131,7 @@ class Vue {
         this.classementJoueursDiv.hide();
         this.classementJoueursDiv.addClass('conteneur-classement-joueurs');
 
-        this.titreClassementJoueurDiv = createDiv('Nombre de cellules');
+        this.titreClassementJoueurDiv = createDiv('Plus grands territoires');
         this.titreClassementJoueurDiv.addClass('titre-classement-joueurs');
         this.classementJoueursDiv.child(this.titreClassementJoueurDiv);
     }
@@ -333,35 +328,10 @@ class Vue {
         return [h, s, l * 2];
     }
 
-    // Initialiser l'interface des tours
-    initialiserTourInterface() {
-        this.texteTourDiv = createDiv("C'est le tour de");
-        // this.texteTourDiv.style('top', '25%');
-        this.diapoTour.ajouterTitre(this.texteTourDiv);
 
-        this.commencerTourButton = createButton("Commencer");
-        // this.commencerTourButton.style('top', '75%');
-        this.diapoTour.ajouterElement(this.commencerTourButton);
-
-        this.commencerTourButton.mouseClicked(() => this.commencerTourActionJoueur());
-
-        this.cacherDiapoTour();
-    }
 
     commencerTourActionJoueur() {
         this.controleur.commencerTourActionJoueur();
-    }
-
-    initialiserTempsRestant() {
-        this.tempsRestantDiv = createDiv();
-        this.tempsRestantDiv.addClass('temps-restant-encadre');
-        this.tourActuelDiv = createDiv('Tour 0');
-        this.tourActuelDiv.addClass('temps-restant-tour');
-        this.tempsRestantDiv.child(this.tourActuelDiv);
-        this.interieurTempsRestantDiv = createDiv('');
-        this.interieurTempsRestantDiv.addClass('temps-restant-interieur');
-        this.tempsRestantDiv.child(this.interieurTempsRestantDiv);
-        this.tempsRestantDiv.style('display', 'flex');
     }
 
     // Modifier la couleur d'un état
@@ -524,38 +494,6 @@ class Vue {
         this.diapoTour.cacher();
     }
 
-    afficherTempsRestant() {
-        let tempsRest = this.controleur.phaseActionTemps;
-        tempsRest -= (millis() - this.controleur.phaseActionJoueurTemps);
-        tempsRest = tempsRest / 1000;
-        if (tempsRest > 0) {
-            tempsRest = tempsRest.toFixed(1);
-        } else {
-            tempsRest = 0;
-        }
-        let texteSeconde = "seconde";
-        if (tempsRest >= 2) {
-            texteSeconde += "s";
-        }
-        this.interieurTempsRestantDiv.html('Il reste ' + str(tempsRest) + ' ' + texteSeconde + '.');
-        this.tourActuelDiv.html('Tour ' + str(this.controleur.jeuNumeroTour));
-    }
-
-    /*initialiserCentrerGrille() {
-        this.conteneurRecentrerDiv = createDiv();
-        this.conteneurRecentrerDiv.addClass('conteneur-bouton-recentrer');
-
-        this.iconeRecentrerImg = createImg('images/recentrer.png');
-        this.iconeRecentrerImg.addClass('icone-bouton-recentrer')
-        this.iconeRecentrerImg.parent(this.conteneurRecentrerDiv);
-
-        this.iconeRecentrerImg.mousePressed(() => this.centrerGrille());
-    }
-
-    afficherRecentrer() {
-        this.conteneurRecentrerDiv.show();
-    }*/
-
     initialiserFinManche() {
         this.nouvellePartieFinMancheButton;
         this.rejouerFinMancheButton;
@@ -645,12 +583,12 @@ class Vue {
         this.classementJoueursPartieDiv.hide();
     }
 
-    /*initialiserIconesMotifs() {
+    initialiserIconesMotifs() {
         this.conteneurIconesMotifsDiv = createDiv();
         this.conteneurIconesMotifsDiv.addClass('conteneur-icones-etampes');
         // this.conteneurIconesMotifsDiv.hide();
 
-        /*this.iconeMotifPlaneurImg = createImg('images/motifPlaneur.png');
+        this.iconeMotifPlaneurImg = createImg('images/motifPlaneur.png');
         this.iconeMotifPlaneurImg.style('order', '0');
         this.iconeMotifPlaneurImg.addClass('icone-etampe');
 
@@ -664,17 +602,17 @@ class Vue {
 
         this.iconeMotifHWSSImg = createImg('images/motifHWSS.png');
         this.iconeMotifHWSSImg.style('order', '3');
-        this.iconeMotifHWSSImg.addClass('icone-etampe');*/
+        this.iconeMotifHWSSImg.addClass('icone-etampe');
 
     // Regroupement des icones des n motifs dans un tableau (anciennement "icones")
-    //this.iconesMotifsImg = selectAll('.icone-etampe');
+    this.iconesMotifsImg = selectAll('.icone-etampe');
 
-    /*for (let i = 0; i < this.iconesMotifsImg.length; i++) {
+    for (let i = 0; i < this.iconesMotifsImg.length; i++) {
         this.iconesMotifsImg[i].style('background-color', 'var(--beige)');
         this.iconesMotifsImg[i].mousePressed(() => this.activerMotif(i));
-    }*/
+    }
 
-    /*this.iconeRotationMotifImg = createImg('images/iconeRotation.png');
+    this.iconeRotationMotifImg = createImg('images/iconeRotation.png');
     this.iconeRotationMotifImg.style('order', '4');
     this.iconeRotationMotifImg.addClass('icone-etampe');
     this.iconeRotationMotifImg.style('background-color', 'var(--beige)');
@@ -699,7 +637,7 @@ class Vue {
     this.conteneurIconesMotifsDiv.child(this.iconeMotifHWSSImg);
     this.conteneurIconesMotifsDiv.child(this.iconeRotationMotifImg);
     this.conteneurIconesMotifsDiv.child(this.iconeAleatoireImg);
-}*/
+    }
 
     activerMotif(index) {
         //this.reinitialiserIcones();
@@ -727,11 +665,11 @@ class Vue {
         }
     }
 
-    /*reinitialiserIcones() {
+    reinitialiserIcones() {
         this.iconeMotifPixelImg.style('background-color', 'var(--beige)');
         this.iconeAleatoireImg.style('background-color', 'var(--beige)');
         for (let i = 0; i < this.iconesMotifsImg.length; i++) {
             this.iconesMotifsImg[i].style('background-color', 'var(--beige)');
         }
-    }*/
+    }
 }

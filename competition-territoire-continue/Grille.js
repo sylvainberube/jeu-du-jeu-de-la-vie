@@ -76,7 +76,7 @@ class Grille {
     }
 
     // Générer une nouvelle grille aléatoire
-    genererAleatoire(nbJoueurs = 4, densite = 0.05) {
+    genererAleatoire(nbJoueurs = 4, densite = 0.0) {
         // Initialisation aléatoire
         for (let i = 0; i < this.lignes; i++) {
             for (let j = 0; j < this.colonnes; j++) {
