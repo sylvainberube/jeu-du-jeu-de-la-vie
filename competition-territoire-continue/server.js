@@ -31,7 +31,7 @@ function nouvelleConnexion(socket) {
         return;
     }
     controleur.ajouterJoueur(socket.id);
-    console.log("ID du joueur : " + controleur.joueurs[socket.id].id);
+    console.log("Connexion : " + socket.id + " | " + controleur.joueurs[socket.id].nom + " | (Etat " + controleur.joueurs[socket.id].etat + ")" );
 
     joueursId.push(socket.id);
 
@@ -140,6 +140,14 @@ function nouvelleConnexion(socket) {
      io.sockets.emit('update', dataUpdate);
 
     }
+
+    socket.on('disconnect', deconnexion);
+    
+    function deconnexion() {
+        console.log("Déconnexion : " + socket.id + " | " + controleur.joueurs[socket.id].nom + " | (Etat " + controleur.joueurs[socket.id].etat + ")" );
+        controleur.supprimerJoueur(socket.id);
+    };
+
 }
 
 // Simulation d'une nouvelle génération
@@ -150,9 +158,9 @@ function calculerGenerationSuivante() {
     let grille = Array.from(controleur.obtenirGrille());
     let grilleTerritoire = controleur.obtenirGrilleTerritoire();
     dataUpdate = {
-        'grille' : grille,
-        'grilleTerritoire' : grilleTerritoire,
-        'classement' : classement
+        'grille': grille,
+        'grilleTerritoire': grilleTerritoire,
+        'classement': classement
     }
     io.sockets.emit('update', dataUpdate);
 
