@@ -71,6 +71,9 @@ function nouvelleConnexion(socket) {
         case ("planeur") :
              if (cellX >= 0 && cellX < colonnes && cellY >= 0 && cellY < lignes) {
                 let motif = motifs.planeur;
+                for(let i = 0; i < position.rotation; i++) {
+                    motif = rotation(motif);
+                }
                 for (i = 0; i < motif.length; i++){
                     for (j = 0; j < motif[0].length; j++) {
                         if(motif[i][j] == 1) {
@@ -86,6 +89,9 @@ function nouvelleConnexion(socket) {
          case ("lwss") :
              if (cellX >= 0 && cellX < colonnes && cellY >= 0 && cellY < lignes) {
                 let motif = motifs.lwss;
+                for(let i = 0; i < position.rotation; i++) {
+                    motif = rotation(motif);
+                }
                 for (i = 0; i < motif.length; i++){
                     for (j = 0; j < motif[0].length; j++) {
                         if(motif[i][j] == 1) {
@@ -101,6 +107,9 @@ function nouvelleConnexion(socket) {
          case ("mwss") : 
          if (cellX >= 0 && cellX < colonnes && cellY >= 0 && cellY < lignes) {
                 let motif = motifs.mwss;
+                for(let i = 0; i < position.rotation; i++) {
+                    motif = rotation(motif);
+                }
                 for (i = 0; i < motif.length; i++){
                     for (j = 0; j < motif[0].length; j++) {
                         if(motif[i][j] == 1) {
@@ -116,6 +125,9 @@ function nouvelleConnexion(socket) {
              case ("hwss") : 
          if (cellX >= 0 && cellX < colonnes && cellY >= 0 && cellY < lignes) {
                 let motif = motifs.hwss;
+                for(let i = 0; i < position.rotation; i++) {
+                    motif = rotation(motif);
+                }
                 for (i = 0; i < motif.length; i++){
                     for (j = 0; j < motif[0].length; j++) {
                         if(motif[i][j] == 1) {
@@ -127,6 +139,17 @@ function nouvelleConnexion(socket) {
                 }
              }
              break;
+             case ("random") :
+                for (let i = -2; i < 3; i++) {
+                    for (let j = -2; j < 3; j++) {
+                        let aleatoire = Math.random();
+                        if (aleatoire < 0.4) {
+                            controleur.modifierCellule(cellX + i, cellY + j, joueurEtat);
+                        } else {
+                            controleur.modifierCellule(cellX + i, cellY + j, 0);
+                        }
+                    }
+                }
             
         }
 
@@ -152,8 +175,8 @@ function nouvelleConnexion(socket) {
 
 // Simulation d'une nouvelle génération
 function calculerGenerationSuivante() {
-    controleur.calculerGenerationSuivante();
     classement = controleur.obtenirClassementJoueurs();
+    controleur.calculerGenerationSuivante();
 
     let grille = Array.from(controleur.obtenirGrille());
     let grilleTerritoire = controleur.obtenirGrilleTerritoire();
@@ -164,6 +187,27 @@ function calculerGenerationSuivante() {
     }
     io.sockets.emit('update', dataUpdate);
 
+}
+
+function creerTableau2D(nbColonnes, nbLignes) {
+    let arr = new Array(nbColonnes);
+    for (let i = 0; i < nbColonnes; i++) {
+        arr[i] = new Array(nbLignes);
+        for (let j = 0; j < nbLignes; j++) {
+            arr[i][j] = 0;
+        }
+    }
+    return arr;
+}
+
+function rotation(config) {
+    let retour = creerTableau2D(config[0].length, config.length);
+    for(i = 0; i <config.length; i++){
+        for(j = 0; j <config[i].length; j++){
+           retour[j][config.length -1 - i] = config[i][j];
+        }
+    }
+    return retour
 }
 
 setInterval(calculerGenerationSuivante, controleur.obtenirIntervalle());

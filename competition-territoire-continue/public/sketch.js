@@ -38,7 +38,8 @@ function mousePressed() {
   let position = {
     typeInterraction: vue.modeInterraction,
     x: cellule[0],
-    y: cellule[1]
+    y: cellule[1],
+    rotation : vue.listeNbRotations[vue.modeInterraction]
   }
   print("Cellule : " + position.x + " " + position.y);
 

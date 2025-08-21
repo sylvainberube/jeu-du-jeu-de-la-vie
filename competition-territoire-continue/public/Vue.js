@@ -37,38 +37,7 @@ class Vue {
         this.classementJoueursDiv;
         this.titreClassementJoueurDiv;
         this.lignesJoueursDiv = [];
-        this.initialiserClassement();
-
-        // Affichage de l'accueil (initialisation de la partie)
-        this.diapoAccueil = new Diapo();
-        this.nbJoueursAccueil = 4;
-        this.joueursNomsAccueil = [];
-        this.joueursCouleursAccueil = [];
-        this.titreAccueilDiv;
-        this.createursAccueilDiv;
-        this.testerAccueilDiv;
-        this.nbJoueursAccueilSlider;
-        this.conteneurJoueursAccueilDiv;
-        this.joueursAccueilDiv = [];
-        this.joueursNomsAccueilInput = [];
-        this.joueursCouleursAccueilColor = [];
-        this.nbJoueursAccueilDiv;
-        this.commencerAccueilButton;
-        this.initialiserAccueilInterface();
-
-        // Affichage de la fin d'une manche
-        this.diapoFinManche = new Diapo();
-        this.nouvellePartieFinMancheButton;
-        this.rejouerFinMancheButton;
-        this.gagnantFinMancheDiv;
-        this.rejouerFinMancheDiv;
-        this.initialiserFinManche();
-
-        // Affichage du classement des joueurs dans la partie
-        this.classementJoueursPartieDiv;
-        this.titreClassementJoueursPartieDiv;
-        this.lignesJoueursPartieDiv = [];
-        this.initialiserClassementJoueursPartie();
+        this.initialiserClassement()
 
         // Affichage des icones des motifs
         this.conteneurIconesMotifsDiv;
@@ -81,10 +50,13 @@ class Vue {
         this.iconesMotifsImg;
         this.iconeRotationMotifImg;
         this.initialiserIconesMotifs();
+        this.listeNomsMotifs;
+        this.listeNbRotations;
+        this.nomAIndexIcones;
 
         //Motifs
         this.rotationMotifs = 0; // 0=0, 1=90, 2=180, 3=270
-        this.modeInterraction = "hwss";
+        this.modeInterraction = "celluleUnique";
     }
 
     // Associer le contrôleur à la vue
@@ -155,7 +127,7 @@ class Vue {
             const joueur = classement[i];
             const ligneDiv = this.lignesJoueursDiv[i];
             ligneDiv.html(`${joueur.nom} (${joueur.points})`);
-            // ligneDiv.style('color', `hsl(${joueur.couleur[0]}, ${joueur.couleur[1]}%, ${joueur.couleur[2] / 2}%)`);
+            ligneDiv.style('background', `hsv(${joueur.etat*20}, ${20}%, ${100}%)`);
         }
 
         // Si on a trop de lignes (ex: moins de joueurs que la frame précédente)
@@ -170,184 +142,6 @@ class Vue {
         this.classementJoueursDiv.hide();
     }
 
-    initialiserAccueilInterface() {
-        // Formatage du titre
-        this.titreAccueilDiv = createDiv();
-        this.diapoAccueil.ajouterTitre(this.titreAccueilDiv);
-        this.titreAccueilDiv.html("Jeu du jeu de la vie (prototype 002)");
-
-        // Formatage du texte de présentation des créateurs
-        this.createursAccueilDiv = createDiv();
-        this.diapoAccueil.ajouterTexte(this.createursAccueilDiv);
-        this.createursAccueilDiv.html("Créé par Mathilde Poulin et Sylvain Bérubé.");
-
-        // Formatage du texte de remerciement pour tester le prototype
-        this.testerAccueilDiv = createDiv();
-        let texte = "Merci de tester ce prototype! ";
-        texte += "Envoyez vos commentaires vos commentaires à ";
-        texte += "<a href=\"mailto:sylvain.berube@usherbrooke.ca\">sylvain.berube@usherbrooke.ca</a>.";
-        this.testerAccueilDiv.html(texte);
-        this.diapoAccueil.ajouterTexte(this.testerAccueilDiv);
-
-        // Formatage des div des joueurs (nom + couleur)
-        this.conteneurJoueursAccueilDiv = createDiv();
-        this.conteneurJoueursAccueilDiv.addClass('conteneur-joueurs')
-        this.diapoAccueil.ajouterElement(this.conteneurJoueursAccueilDiv);
-
-        for (let i = 0; i < this.nbJoueursAccueil; i++) {
-            let joueurAccueilDiv = createDiv("");
-            joueurAccueilDiv.addClass("joueur");
-            joueurAccueilDiv.parent(this.conteneurJoueursAccueilDiv);
-            this.joueursAccueilDiv.push(joueurAccueilDiv);
-
-            let nomJoueurAccueilInput = createInput('Joueur ' + str(i + 1));
-            nomJoueurAccueilInput.style('width', '100px')
-            nomJoueurAccueilInput.parent(this.joueursAccueilDiv[i]);
-            this.joueursNomsAccueilInput.push(nomJoueurAccueilInput);
-
-            let couleurJoueurAccueilColor = createColorPicker(color((Math.floor(i / 5) * 36 + 2 * 36 * i) % 360, 100, 75));
-            couleurJoueurAccueilColor.parent(this.joueursAccueilDiv[i]);
-            this.joueursCouleursAccueilColor.push(couleurJoueurAccueilColor);
-        }
-
-        // Formatage du nombre de joueur
-        this.nbJoueursAccueilDiv = createDiv();
-        this.nbJoueursAccueilDiv.html("Nombre de joueurs : " + str(this.nbJoueursAccueil));
-        this.diapoAccueil.ajouterTexte(this.nbJoueursAccueilDiv);
-
-        // Formatage du slider
-        this.nbJoueursAccueilSlider = createSlider(2, 10, this.nbJoueursAccueil, 1);
-        let sliderWidth = 0.2 * 1000;
-        this.nbJoueursAccueilSlider.style('width', sliderWidth + 'px');
-        this.diapoAccueil.ajouterElement(this.nbJoueursAccueilSlider);
-
-        // Formatage du bouton « Commencer »
-        this.commencerAccueilButton = createButton();
-        this.commencerAccueilButton.html("Commencer une nouvelle partie");
-        this.commencerAccueilButton.style('top', '85%');
-        this.diapoAccueil.ajouterElement(this.commencerAccueilButton);
-
-        this.joueursNomsAccueil = [];
-        this.joueursCouleursAccueil = [];
-
-        for (let i = 0; i < this.nbJoueurs; i++) {
-            this.joueursNomsAccueil.push(this.joueursNomsAccueilInput[i].value());
-            let couleur = this.joueursCouleursAccueilColor[i].value();
-            this.joueursCouleursAccueil.push(this.hexToHSB(couleur));
-        }
-
-        // Modifier l'apparence lorsque l'on utilise le slider
-        this.nbJoueursAccueilSlider.changed(() => this.changerNbJoueursAccueil());
-
-        // Commencer une partie lorsqu'on clique sur le bouton
-        this.commencerAccueilButton.mouseClicked(() => this.commencerPartie());
-
-        this.cacherDiapoAccueil();
-    }
-
-    commencerPartie() {
-        this.joueursNomsAccueil = [];
-        this.joueursCouleursAccueil = [];
-        for (let i = 0; i < this.nbJoueursAccueil; i++) {
-            this.joueursNomsAccueil.push(this.joueursNomsAccueilInput[i].value());
-            let couleur = this.joueursCouleursAccueilColor[i].value();
-            this.joueursCouleursAccueil.push(this.hexToHSB(couleur));
-        }
-
-        this.controleur.nbJoueurs = this.nbJoueursAccueil;
-        this.controleur.joueursNoms = this.joueursNomsAccueil;
-        this.controleur.joueursCouleurs = this.joueursCouleursAccueil;
-        this.controleur.commencerPartie();
-    }
-
-    // Changer le nombre de joueurs via le slider et ajuster les div des joueurs
-    changerNbJoueursAccueil() {
-        if (this.nbJoueursAccueilSlider.value() > this.nbJoueursAccueil) {
-            for (let i = this.nbJoueursAccueil; i < this.nbJoueursAccueilSlider.value(); i++) {
-                let joueurAccueilDiv = createDiv('');
-                joueurAccueilDiv.addClass('joueur');
-                joueurAccueilDiv.parent(this.conteneurJoueursAccueilDiv);
-                this.joueursAccueilDiv.push(joueurAccueilDiv);
-
-                let nomDuJoueurAccueilInput = createInput('Joueur ' + str(i + 1));
-                nomDuJoueurAccueilInput.style('width', '100px')
-                nomDuJoueurAccueilInput.parent(this.joueursAccueilDiv[i]);
-                this.joueursNomsAccueilInput.push(nomDuJoueurAccueilInput);
-
-                let couleurJoueurAccueilColor = createColorPicker(color((Math.floor(i / 5) * 36 + 2 * 36 * i) % 360, 100, 75));
-                couleurJoueurAccueilColor.parent(this.joueursAccueilDiv[i]);
-                this.joueursCouleursAccueilColor.push(couleurJoueurAccueilColor);
-            }
-        } else if (this.nbJoueursAccueilSlider.value() < this.nbJoueursAccueil) {
-            for (let i = this.nbJoueursAccueil - 1; i >= this.nbJoueursAccueilSlider.value(); i--) {
-                this.joueursAccueilDiv[i].remove();
-                this.joueursAccueilDiv[i].hide();
-                this.joueursAccueilDiv.pop();
-                this.joueursCouleursAccueilColor.pop();
-                this.joueursNomsAccueilInput.pop();
-            }
-        }
-        this.nbJoueursAccueil = this.nbJoueursAccueilSlider.value();
-        this.nbJoueursAccueilDiv.html("Nombre de joueurs : " + str(this.nbJoueursAccueilSlider.value()));
-    }
-
-
-    // Convertir la couleur du ColorPicker au format HSB
-    hexToHSB(H) {
-        // Convertir hex vers RGB
-        let r = 0, g = 0, b = 0;
-        if (H.length == 4) {
-            r = "0x" + H[1] + H[1];
-            g = "0x" + H[2] + H[2];
-            b = "0x" + H[3] + H[3];
-        } else if (H.length == 7) {
-            r = "0x" + H[1] + H[2];
-            g = "0x" + H[3] + H[4];
-            b = "0x" + H[5] + H[6];
-        }
-        // Convertir RGB vers to HSB
-        r /= 255;
-        g /= 255;
-        b /= 255;
-        let cmin = Math.min(r, g, b),
-            cmax = Math.max(r, g, b),
-            delta = cmax - cmin,
-            h = 0,
-            s = 0,
-            l = 0;
-        if (delta == 0)
-            h = 0;
-        else if (cmax == r)
-            h = ((g - b) / delta) % 6;
-        else if (cmax == g)
-            h = (b - r) / delta + 2;
-        else
-            h = (r - g) / delta + 4;
-        h = Math.round(h * 60);
-        if (h < 0)
-            h += 360;
-        l = (cmax + cmin) / 2;
-        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-        s = +(s * 100).toFixed(1);
-        l = +(l * 100).toFixed(1);
-        return [h, s, l * 2];
-    }
-
-
-
-    commencerTourActionJoueur() {
-        this.controleur.commencerTourActionJoueur();
-    }
-
-    // Modifier la couleur d'un état
-    modifierCouleurEtat(etat, couleur) {
-        this.couleursEtats[etat] = couleur;
-    }
-
-    // Obtenir la couleur d'un état
-    obtenirCouleurEtat(etat) {
-        return this.couleursEtats[etat];
-    }
 
     // Modifier le zoom
     definirZoom(nouveauZoom) {
@@ -491,149 +285,64 @@ class Vue {
         this.diapoAccueil.cacher();
     }
 
-    afficherDiapoTour() {
-        this.diapoTour.afficher();
-    }
-
-    cacherDiapoTour() {
-        this.diapoTour.cacher();
-    }
-
-    initialiserFinManche() {
-        this.nouvellePartieFinMancheButton;
-        this.rejouerFinMancheButton;
-        this.gagnantFinMancheDiv;
-        this.rejouerFinMancheDiv;
-
-        this.gagnantFinMancheDiv = createDiv('');
-        // this.gagnantFinMancheDiv.style('top', '25%');
-        this.diapoFinManche.ajouterTitre(this.gagnantFinMancheDiv);
-
-        this.rejouerFinMancheDiv = createDiv("Envie d'une autre partie?");
-        // this.rejouerFinMancheDiv.style('top', '55%');
-        this.diapoFinManche.ajouterTexte(this.rejouerFinMancheDiv);
-
-        this.nouvellePartieFinMancheButton = createButton("Nouvelle partie");
-        this.nouvellePartieFinMancheButton.style('top', '75%');
-        this.nouvellePartieFinMancheButton.style('left', '33%');
-        this.diapoFinManche.ajouterElement(this.nouvellePartieFinMancheButton);
-
-        this.rejouerFinMancheButton = createButton("Rejouer");
-        this.rejouerFinMancheButton.style('top', '75%');
-        this.rejouerFinMancheButton.style('left', '66%');
-        this.diapoFinManche.ajouterElement(this.rejouerFinMancheButton);
-
-        this.nouvellePartieFinMancheButton.mousePressed(() => this.nouvellePartie());
-        this.rejouerFinMancheButton.mousePressed(() => this.nouvelleManche());
-
-        this.diapoFinManche.cacher();
-    }
-
-    afficherFinManche() {
-        this.diapoFinManche.afficher();
-    }
-
-    cacherFinManche() {
-        this.diapoFinManche.cacher();
-    }
-
-    nouvellePartie() {
-        this.cacherFinManche();
-        this.controleur.accueil();
-    }
-
-    nouvelleManche() {
-        this.cacherFinManche();
-        this.controleur.commencerManche();
-    }
-
-    initialiserClassementJoueursPartie() {
-        this.classementJoueursPartieDiv = createDiv();
-        this.titreClassementJoueursPartieDiv = createDiv('Manches gagnées');
-
-        this.classementJoueursPartieDiv.addClass('conteneur-classement-parties');
-        this.titreClassementJoueursPartieDiv.addClass('titre-classement-parties');
-        this.titreClassementJoueursPartieDiv.style('order', '-1')
-        this.classementJoueursPartieDiv.child(this.titreClassementJoueursPartieDiv);
-
-        this.classementJoueursPartieDiv.hide();
-    }
-
-    afficherClassementJoueursPartie(classementPartie) {
-        // S’il y a plus de joueurs qu’avant, on crée les divs manquants
-        while (this.lignesJoueursPartieDiv.length < classementPartie.length) {
-            let ligneDiv = createDiv();  // vide au départ
-            ligneDiv.addClass('item-classement-joueurs');
-            this.classementJoueursPartieDiv.child(ligneDiv);
-            this.lignesJoueursPartieDiv.push(ligneDiv);
-        }
-
-        // Mise à jour du contenu et de la couleur
-        for (let i = 0; i < classementPartie.length; i++) {
-            const joueur = classementPartie[i];
-            const ligneDiv = this.lignesJoueursPartieDiv[i];
-            ligneDiv.html(`${joueur.nom} (${joueur.manches})`);
-            ligneDiv.style('color', `hsl(${joueur.couleur[0]}, ${joueur.couleur[1]}%, ${joueur.couleur[2] / 2}%)`);
-        }
-
-        // Si on a trop de lignes (ex: moins de joueurs que la frame précédente)
-        for (let i = classementPartie.length; i < this.lignesJoueursPartieDiv.length; i++) {
-            this.lignesJoueursPartieDiv[i].hide();
-        }
-
-        this.classementJoueursPartieDiv.show();
-    }
-
-    cacherClassementJoueursPartie() {
-        this.classementJoueursPartieDiv.hide();
-    }
 
     initialiserIconesMotifs() {
         this.conteneurIconesMotifsDiv = createDiv();
         this.conteneurIconesMotifsDiv.addClass('conteneur-icones-etampes');
         // this.conteneurIconesMotifsDiv.hide();
 
+        this.listeNomsMotifs = [];
+
         this.iconeMotifPlaneurImg = createImg('images/motifPlaneur.png');
         this.iconeMotifPlaneurImg.style('order', '0');
         this.iconeMotifPlaneurImg.addClass('icone-etampe');
+        this.listeNomsMotifs.push('planeur');
 
         this.iconeMotifLWSSImg = createImg('images/motifLWSS.png');
         this.iconeMotifLWSSImg.style('order', '1');
         this.iconeMotifLWSSImg.addClass('icone-etampe');
+        this.listeNomsMotifs.push('lwss');
 
         this.iconeMotifMWSSImg = createImg('images/motifLWSS.png');
         this.iconeMotifMWSSImg.style('order', '2');
         this.iconeMotifMWSSImg.addClass('icone-etampe');
+        this.listeNomsMotifs.push('mwss');
 
         this.iconeMotifHWSSImg = createImg('images/motifHWSS.png');
         this.iconeMotifHWSSImg.style('order', '3');
         this.iconeMotifHWSSImg.addClass('icone-etampe');
+        this.listeNomsMotifs.push('hwss');
+
+    this.iconeMotifPixelImg = createImg('images/iconePixel.png');
+    this.iconeMotifPixelImg.style('order', '4');
+    this.iconeMotifPixelImg.addClass('icone-etampe');
+    this.iconeMotifPixelImg.style('background-color', 'var(--blanc)');
+    this.listeNomsMotifs.push('celluleUnique');
+
+    this.iconeAleatoireImg = createImg('images/iconeAleatoire.png');
+    this.iconeAleatoireImg.style('order', '5');
+    this.iconeAleatoireImg.addClass('icone-etampe');
+    this.iconeAleatoireImg.style('background-color', 'var(--beige)');
+    this.listeNomsMotifs.push('random');
+
+    //Important que la rotation reste en dernier (parce qu'on ne peut pas la sélectionner)
+
+    this.iconeRotationMotifImg = createImg('images/iconeRotation.png');
+    this.iconeRotationMotifImg.style('order', '6');
+    this.iconeRotationMotifImg.addClass('icone-etampe');
+    this.iconeRotationMotifImg.style('background-color', 'var(--beige)');
+    this.iconeRotationMotifImg.mousePressed(() => this.faireRotation());
 
     // Regroupement des icones des n motifs dans un tableau (anciennement "icones")
     this.iconesMotifsImg = selectAll('.icone-etampe');
 
-    for (let i = 0; i < this.iconesMotifsImg.length; i++) {
+    for (let i = 0; i < this.iconesMotifsImg.length - 1; i++) { // - 1 pour exclure la rotation
         this.iconesMotifsImg[i].style('background-color', 'var(--beige)');
         this.iconesMotifsImg[i].mousePressed(() => this.activerMotif(i));
     }
-
-    this.iconeRotationMotifImg = createImg('images/iconeRotation.png');
-    this.iconeRotationMotifImg.style('order', '4');
-    this.iconeRotationMotifImg.addClass('icone-etampe');
-    this.iconeRotationMotifImg.style('background-color', 'var(--beige)');
-    this.iconeRotationMotifImg.mousePressed(() => this.controleur.activerRotationMotifs());
-
-    this.iconeMotifPixelImg = createImg('images/iconePixel.png');
-    this.iconeMotifPixelImg.style('order', '5');
-    this.iconeMotifPixelImg.addClass('icone-etampe');
+    
     this.iconeMotifPixelImg.style('background-color', 'var(--blanc)');
-    this.iconeMotifPixelImg.mousePressed(() => this.controleur.activerMotifPixel());
 
-    this.iconeAleatoireImg = createImg('images/iconeAleatoire.png');
-    this.iconeAleatoireImg.style('order', '6');
-    this.iconeAleatoireImg.addClass('icone-etampe');
-    this.iconeAleatoireImg.style('background-color', 'var(--beige)');
-    this.iconeAleatoireImg.mousePressed(() => this.controleur.activerBlocAleatoire());
 
     this.conteneurIconesMotifsDiv.child(this.iconeMotifPixelImg);
     this.conteneurIconesMotifsDiv.child(this.iconeMotifPlaneurImg);
@@ -642,14 +351,31 @@ class Vue {
     this.conteneurIconesMotifsDiv.child(this.iconeMotifHWSSImg);
     this.conteneurIconesMotifsDiv.child(this.iconeRotationMotifImg);
     this.conteneurIconesMotifsDiv.child(this.iconeAleatoireImg);
+
+    this.listeNbRotations = {
+        'planeur' : 0,
+        'lwss' : 0,
+        'mwss' : 0,
+        'hwss' : 0
     }
 
+    this.nomAIndexIcone = {
+         'planeur' : 0,
+         'lwss' : 1,
+         'mwss' : 2,
+         'hwss' : 3
+    }
+
+}
+    
+
     activerMotif(index) {
-        //this.reinitialiserIcones();
-        this.controleur.motifPixelActif = false;
+        this.reinitialiserIcones();
+        /*this.controleur.motifPixelActif = false;
         this.controleur.blocAleatoireActif = false;
-        this.controleur.motifActuelIndex = index;
+        this.controleur.motifActuelIndex = index; */
         this.iconesMotifsImg[index].style('background-color', 'var(--blanc)');
+        this.modeInterraction = this.listeNomsMotifs[index];
     }
 
     afficherMotif(grilleMotif, posX, posY) {
@@ -669,6 +395,12 @@ class Vue {
             }
         }
     }
+
+    faireRotation() {
+        this.listeNbRotations[this.modeInterraction] = (this.listeNbRotations[this.modeInterraction] + 1)%4;
+        this.iconesMotifsImg[this.nomAIndexIcone[this.modeInterraction]].style('transform', 'rotate(-' + str(this.listeNbRotations[this.modeInterraction]*90) + 'deg)');
+    }
+
 
     reinitialiserIcones() {
         this.iconeMotifPixelImg.style('background-color', 'var(--beige)');

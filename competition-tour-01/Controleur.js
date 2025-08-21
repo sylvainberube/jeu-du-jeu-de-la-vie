@@ -552,10 +552,15 @@ class Controleur {
         this.vue.cacherDiapoTour();
     }
 
+    print() {
+        console.log('allo');
+    }
+
     obtenirClassementJoueurs() {
         const pointsParId = this.grille.compterCellulesParEtat(); // ex: {0: 150, 1: 97, ...}
-
         let classement = [];
+
+        console.log(this.nbJoueurs);
 
         // On construit un tableau structuré pour la Vue
         for (let i = 0; i < this.nbJoueurs; i++) {

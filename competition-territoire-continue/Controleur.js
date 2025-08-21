@@ -25,6 +25,7 @@ class Controleur {
         this.nbJoueurs = 0;
         this.joueursNoms = [];
         this.joueursCouleurs = [];
+        this.IDsJoueurs = [];
 
         this.etatGlobal = "accueil";   // États possibles : "accueil", "jeu"
         // États du jeu
@@ -437,17 +438,17 @@ class Controleur {
     }
 
     obtenirClassementJoueurs() {
-        // const pointsParId = this.grille.compterCellulesParEtat(); // ex: {0: 150, 1: 97, ...}
         const pointsParId = this.grille.compterTerritoireParEtat(); // ex: {0: 150, 1: 97, ...}
 
         let classement = [];
 
+
         // On construit un tableau structuré pour la Vue
-        for (let i = 0; i < this.nbJoueurs; i++) {
+        for (let i = 0; i < this.IDsJoueurs.length; i++) {
             classement.push({
-                nom: this.joueursNoms[i],
-                couleur: this.joueursCouleurs[i],
-                points: pointsParId[i + 1] || 0
+                nom: this.joueurs[this.IDsJoueurs[i]].nom,
+                etat: this.joueurs[this.IDsJoueurs[i]].etat,
+                points: pointsParId[this.joueurs[this.IDsJoueurs[i]].etat] || 0
             });
         }
 
@@ -621,6 +622,8 @@ class Controleur {
             etat: etatJoueur,
             coinways: 0
         };
+
+        this.IDsJoueurs.push(joueurId);
     }
 
     supprimerJoueur(joueurId) {
@@ -629,6 +632,9 @@ class Controleur {
 
         // Retirer le joueur de la liste des joueurs
         delete this.joueurs[joueurId];
+
+        const index = this.IDsJoueurs.indexOf(joueurId);
+        this.IDsJoueurs.splice(index, 1);
     }
 
     obtenirNombreJoueur() {
